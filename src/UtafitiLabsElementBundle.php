@@ -93,16 +93,19 @@ final class UtafitiLabsElementBundle extends AbstractBundle
      * What an installation must never have to write.
      *
      * Every prepend is guarded on the extension existing — a kernel without
-     * AssetMapper or without TwigComponentBundle must still boot — and passes
-     * `prepend: true`, because `extension()` APPENDS by default even here,
-     * which would put this bundle's opinion LAST, where it overrules the
-     * application instead of deferring to it.
+     * AssetMapper or without TwigComponentBundle must still boot — and every
+     * block is written with `prependExtensionConfig()` on the builder, the form
+     * the docs and symfony/ux-map write, so this bundle's opinion goes FIRST
+     * and "any other settings done explicitly inside the config/* files would
+     * override these prepended settings".
+     *
+     * @see https://symfony.com/doc/current/bundles/prepend_extension.html
+     * @see vendor/symfony/ux-map/src/UXMapBundle.php:117
      *
      * Patterned on symfony/ux-turbo's TurboExtension::prepend() (AssetMapper
      * path) and on the shape TwigComponentExtension's own configuration tree
      * requires (vendor/symfony/ux-twig-component/src/DependencyInjection/TwigComponentExtension.php:
      * `defaults` is isRequired(), keyed by a namespace that must end in "\").
-     *
      * @see https://symfony.com/doc/current/frontend/asset_mapper.html
      * @see https://symfony.com/bundles/ux-twig-component/current/index.html#registering-a-third-party-component-namespace
      */
@@ -112,9 +115,9 @@ final class UtafitiLabsElementBundle extends AbstractBundle
         // conditions are real: a kernel may have no framework extension, and
         // AssetMapper is an optional component of the ones it does have.
         if ($builder->hasExtension('framework') && interface_exists(AssetMapperInterface::class)) {
-            $container->extension('framework', ['asset_mapper' => ['paths' => [
+            $builder->prependExtensionConfig('framework', ['asset_mapper' => ['paths' => [
                 \dirname(__DIR__).'/assets' => self::ASSET_NAMESPACE,
-            ]]], prepend: true);
+            ]]]);
         }
 
         // The component namespace, so `<twig:Element:Table>` resolves in an
@@ -122,7 +125,7 @@ final class UtafitiLabsElementBundle extends AbstractBundle
         // application adding its own components adds a key and overrides
         // nothing of this bundle's.
         if ($builder->hasExtension('twig_component')) {
-            $container->extension('twig_component', [
+            $builder->prependExtensionConfig('twig_component', [
                 'defaults' => [
                     self::COMPONENT_NAMESPACE => [
                         'template_directory' => self::TEMPLATE_DIRECTORY,
@@ -133,10 +136,10 @@ final class UtafitiLabsElementBundle extends AbstractBundle
                 // isRequired() in TwigComponentBundle's tree, so a kernel that
                 // installs this library and writes no twig_component config
                 // would refuse to boot. The value is the one that extension's
-                // own info() names as the default, and prepend: true leaves an
+                // own info() names as the default, and prepending leaves an
                 // application free to say something else.
                 'anonymous_template_directory' => 'components',
-            ], prepend: true);
+            ]);
         }
     }
 
