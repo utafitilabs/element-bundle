@@ -6,51 +6,80 @@ one.
 
 ## Contents
 
-- [Open — for the kick-off](#open--for-the-kick-off)
+- [A generic bundle, themed from configuration](#a-generic-bundle-themed-from-configuration)
+- [The categorical hues](#the-categorical-hues)
+- [Where truth lives](#where-truth-lives)
 - [The fold contract](#the-fold-contract)
 - [Tailwind, built here and committed](#tailwind-built-here-and-committed)
-- [The palette lives in two files](#the-palette-lives-in-two-files)
-- [No dependency on an application](#no-dependency-on-the-platform)
+- [No dependency on an application](#no-dependency-on-an-application)
 - [Explicit DI, and no AsTwigComponent attribute](#explicit-di-and-no-astwigcomponent-attribute)
 - [The component prepares the view](#the-component-prepares-the-view)
 - [Rows and columns are value objects, built from arrays](#rows-and-columns-are-value-objects-built-from-arrays)
 - [The chevron is an anchor](#the-chevron-is-an-anchor)
 
-## Open — for the kick-off
+## A generic bundle, themed from configuration
 
-**NEEDS A VERDICT: design-workspace parity — who owns the register vocabulary once
-components live here?**
+**RULED 2026-09-24.** This is a generic library: any product installs it
+unchanged, and products differ by **colour and type only** — so the flexibility
+lives in configuration, never in a fork of the sheet.
 
-This library now ships `.c`, `.tab`, `.src`, `table.tbl`, the sortable-header
-rules and the whole fold contract. `shell-module/public/shell.css` ships the same
-rules today, and the design workspace
-a consuming product keeps is the drawing both were ported from. Three copies of one vocabulary is two too many, and two of
-them being loaded on the same page is a rendering decided by load order.
+The consequences, all of them deliberate:
 
-What the owner has to decide, before the shell consumes `<twig:Element:Table>`:
+- The built stylesheet spends `var(--e-*)` and **defines nothing**. A value it
+  needs and the theme has not got is a new node in `element.theme`, not a literal.
+- There is **no token stylesheet**. `element_theme()` renders the values into the
+  page, which ends the old failure mode of two sheets defining one colour and the
+  rendering being decided by load order. It also means there is nothing for a
+  product to "install first".
+- The properties carry this bundle's own prefix (`--e-`), so a page that also
+  carries somebody else's design tokens cannot collide with these.
+- A theme value goes into a `<style>` element, so the characters that could close
+  one are refused **when the container is built** — a validation error an
+  installation reads, not an escape a reader never sees.
 
-1. **Does the shell give the register vocabulary up?** If the shell keeps its
-   copies, a shell page that draws this component loads both and the later sheet
-   wins. The clean answer is that the shell deletes `table.tbl`, the fold rules,
-   `.c` and `.tab` from `shell.css` in the same release that adopts the
-   component. That is a coordinated change across two packages, so it is a
-   ruling, not a refactor.
-2. **Who owns the `--c-*` channels?** Today both `shell.css` and this bundle's
-   `element-tokens.css` define them; this bundle's copy exists so the library can
-   stand on its own and so its style guide renders. Either element becomes the
-   home of the palette and the shell links it, or the shell stays the home and
-   `element-tokens.css` is demoted to a style-guide-only file that no
-   installation ever links. The code is written so either answer is a one-file
-   change; the decision is not this bundle's to make.
-3. **Is the design workspace still the source of truth, or is the style guide?**
-   A component library with a rendered guide can be the thing a design is checked
-   against. If the workspace stays canonical, the guide is a mirror and someone
-   has to keep them in step; if the guide becomes canonical, the workspace's
-   register pages retire. Today the workspace is canonical and this library was
-   ported from it.
+**This bundle owns the register vocabulary** — `.c`, `.tab`, `.src`, `table.tbl`,
+the sortable-header rules and the fold contract — and the palette channels. A
+product that has its own copies of those rules deletes them in the release that
+adopts the component; two copies on one page is a rendering decided by load
+order.
 
-Until that verdict, nothing in an application consumes this bundle — which is
-deliberate, and why this first version ships with no integration.
+*Reopens when:* a component genuinely cannot be expressed as one sheet plus
+values — at which point the answer is a new configuration node, and only then a
+second sheet.
+
+## The categorical hues
+
+**RULED 2026-09-24: categorical hues are the bundle's, named by look; the product
+maps its categories.** Eighteen colours ship under `element.theme.hues`, named for
+what they look like (`moss`, `ochre`, `sky`, …) because what they MEAN belongs to
+the product: a product maps its own categories onto them, by NAME where a meaning
+has to stay put and by INDEX (`--e-hue-7`) where a series just needs colours that
+differ. The library never learns what a category is, so no product word reaches
+this repository.
+
+The set is **open** — a product restates any value and appends its own, and both
+are the same gesture — and it is **measured, not chosen by eye**: every hue stands
+at least 12.0 from every other in CIE76 Lab distance (the closest shipped pair
+measures 13.3) and clears 4.5:1 against the ground it is drawn on, in light and
+in dark. `tests/Unit/Theme/HuePaletteTest.php` asserts both, so the day somebody
+adds a nineteenth the suite says whether the set can still be told apart. CIE76
+is the simple metric on purpose: the number this bundle computes and the number a
+product computes over its own additions are arrived at the same way.
+
+*Reopens when:* a set this size stops being enough, which is a request for a
+second dimension (weight, pattern) rather than a nineteenth hue.
+
+## Where truth lives
+
+**RULED 2026-09-24.** Component-level truth is **this bundle's rendered style
+guide**: what a register looks like is settled here, and a product checks its
+port against the guide. Page-level truth stays with **the consuming product's own
+design workspace**: how a screen is composed, what goes where, and which
+components a page wears is the product's drawing, not the library's.
+
+*Reopens when:* a product needs a component the guide does not render — the
+component is designed in that product's workspace and then moves here, guide
+first.
 
 ## The fold contract
 
@@ -86,26 +115,16 @@ theme is emitted whole (`@theme static`).
 *Reopens when:* an application gains a shared asset build that bundles can hook
 into, or when a consumer needs utilities this library cannot know about.
 
-## The palette lives in two files
-
-`element.css` spends `rgb(var(--c-*))` and defines nothing;
-`element-tokens.css` defines the channels for a page that has no other source of
-them. Two definitions of one colour is a rendering decided by load order, and
-that is the bug the split prevents. Two tests hold it: the component sheet
-defines no channel, and the token sheet defines every channel the component sheet
-spends.
-
-*Reopens when:* the ownership question above is ruled.
-
 ## No dependency on an application
 
 `composer.json` requires no application package, and `tests/Integration/TestKernel.php`
-installs no platform bundle. A component library an application is built out of
-cannot be built out of an application, and a test kernel that quietly installed the
-shell would hide the day this stopped being true.
+installs no application bundle. A component library an application is built out
+of cannot be built out of the application, and a test kernel that quietly
+installed one would hide the day this stopped being true.
 
-*Reopens when:* a component genuinely needs a platform contract — in which case
-the contract, not the implementation, is what this bundle may depend on.
+*Reopens when:* a component genuinely needs a contract from its host — in which
+case the contract, not an implementation of it, is what this bundle may depend
+on.
 
 ## Explicit DI, and no AsTwigComponent attribute
 

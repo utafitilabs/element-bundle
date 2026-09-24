@@ -1,7 +1,7 @@
 # Element — documentation
 
-The component library: Twig components, styled with Tailwind, that the
-shell and every module render their vocabulary with.
+A Twig component library for Symfony: components styled with Tailwind, themed
+entirely from the consuming application's configuration.
 
 ## Contents
 
@@ -19,7 +19,7 @@ belong in a README: the reasoning, and the open questions.
 
 | Page | What it answers |
 |---|---|
-| [design-decisions.md](design-decisions.md) | every deliberate choice, why, and the trigger that reopens it — **including the open design-workspace-parity verdict this library needs from its owner** |
+| [design-decisions.md](design-decisions.md) | every deliberate choice, why, and the trigger that reopens it |
 
 ## How a component is added
 
@@ -36,8 +36,10 @@ belong in a README: the reasoning, and the open questions.
 5. **Tag it by hand** in `config/services.php`: `twig.component` with `key`,
    `template` and `expose_public_props: true`. A reusable bundle does not
    autoconfigure.
-6. **The styles** go in `assets/styles/element.css`; run `composer css:build` and
-   commit the input and the output together.
+6. **The styles** go in `assets/styles/element.css`. They spend `var(--e-*)` and
+   define nothing: a value the components need and the theme has not got is a new
+   node in `element.theme`, not a literal in the sheet. Run `composer css:build`
+   and commit the input and the output together.
 7. **Add it to the style guide** (`tests/Integration/Fixtures/templates/style-guide.html.twig`).
    A component that cannot be looked at drifts.
 8. **`composer check`** — code style, PHPStan max, the suite.
