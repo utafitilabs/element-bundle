@@ -1,0 +1,56 @@
+{#
+    THE STYLE GUIDE. One page, every component, sample rows — the page a
+    maintainer opens and the page the functional suite reads.
+
+    It links BOTH stylesheets, in the order a page with no other source of the
+    house channels must: the tokens first, the components after. A page drawn
+    inside a host that already publishes the channels links the second alone.
+#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Element — style guide</title>
+    <link rel="stylesheet" href="{{ asset(constant('Uhifadhi\\Element\\UhifadhiElementBundle::TOKENS_STYLESHEET')) }}">
+    <link rel="stylesheet" href="{{ asset(constant('Uhifadhi\\Element\\UhifadhiElementBundle::STYLESHEET')) }}">
+    <style>
+        body { background: rgb(var(--c-cv)); color: rgb(var(--c-tx)); font-family: var(--font-body); margin: 0; padding: 40px 16px; }
+        main { max-width: 980px; margin: 0 auto; display: grid; gap: 40px; }
+        h1 { font-family: var(--font-display); font-size: 20px; margin: 0; }
+        p.lede { color: rgb(var(--c-fog)); font-size: 13px; margin: 6px 0 0; }
+    </style>
+</head>
+<body>
+<main>
+    <header>
+        <h1>Element</h1>
+        <p class="lede">The house component library. Every component below is what a module renders, unchanged.</p>
+    </header>
+
+    {# THE REGISTER, FOLDING. Rows fold onto a panel; the address says which. #}
+    <twig:Element:Table
+        title="Positions"
+        note="what each grants, and who holds it"
+        :columns="columns"
+        :rows="rows"
+        :sort="sort"
+        :open="open"
+    >
+        <twig:block name="fold">
+            <p>{{ row.name }} — {{ row.cell('seats') }} seats, {{ row.cell('placement')|lower }}.</p>
+        </twig:block>
+    </twig:Element:Table>
+
+    {# THE SAME REGISTER, FLAT. No row folds, so no chevron column is drawn. #}
+    <twig:Element:Table title="Placements" :count="false" :columns="[{ key: 'placement', label: 'Placement' }]" :rows="[
+        { cells: { placement: 'Organization' } },
+        { cells: { placement: 'Area' } },
+        { cells: { placement: 'Department' } }
+    ]" />
+
+    {# AND WITH NOTHING IN IT. An empty register states the fact. #}
+    <twig:Element:Table title="Vacancies" :columns="[{ key: 'position', label: 'Position' }]" :rows="[]" />
+</main>
+</body>
+</html>

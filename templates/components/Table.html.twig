@@ -1,0 +1,72 @@
+{#
+    `<twig:Element:Table>` — THE HOUSE REGISTER.
+
+    THE FOLD CONTRACT IS RULED (2026-09-22) AND THIS MARKUP IS IT. A folding row
+    carries a chevron cell and its identity; ONE `tr.foldrow` follows it holding
+    `.foldbox > .fold-in > content`; the server renders a row open where the
+    address names it. The motion is the stylesheet's and the click is the
+    `register-fold` controller's — neither is decided here.
+
+    Three blocks are the caller's:
+      filters  the bar above the table, inside the card
+      row      the row's cells; it sees `row`, `isOpen` and `loop`
+      fold     what opens underneath the row; it sees the same
+    and `empty` is what an empty register says, which has a configured default.
+
+    `headers` and `body` are the component's prepared view (see Table::postMount):
+    every per-column and per-row decision is made in PHP, so this file only
+    draws. Whitespace is controlled throughout, because this markup is asserted
+    literally by tests/Functional/TableRenderTest.php.
+#}
+<div{{ attributes.defaults({ class: 'c el-reg' }) }}>
+    {%- if this.src is not empty -%}
+        <span class="tab">{{ title }}<span class="src">{{ this.src }}</span></span>
+    {%- else -%}
+        <span class="tab">{{ title }}</span>
+    {%- endif -%}
+
+    {% block filters %}{% endblock %}
+
+    <div class="el-scroll">
+    <table class="tbl"
+        {%- if this.foldable %} data-controller="{{ controller }}" data-{{ controller }}-param-value="{{ foldParam }}"{% endif -%}
+    >
+        <thead>
+            <tr>
+                {%- if this.foldable %}<th class="fchev-h"></th>{% endif -%}
+                {%- for header in headers -%}
+                    <th{% if header.class %} class="{{ header.class }}"{% endif %}{% if header.sorted %} aria-sort="{{ direction }}"{% endif %}>
+                        {%- if header.sortUrl %}<a href="{{ header.sortUrl }}">{{ header.label }}</a>{% else %}{{ header.label }}{% endif -%}
+                    </th>
+                {%- endfor -%}
+            </tr>
+        </thead>
+        <tbody>
+            {%- for entry in body -%}
+                {%- set row = entry.row -%}
+                {%- set isOpen = entry.open -%}
+                <tr{% if isOpen %} class="open"{% endif %}{% if row.id %} data-fold-id="{{ row.id }}"{% endif %}{% if row.name %} data-fold-name="{{ row.name }}"{% endif %}>
+                    {%- if this.foldable -%}
+                        <td class="fchev-c">
+                            {%- if row.foldable -%}
+                                <a class="fchev" href="#" data-action="{{ controller }}#toggle" aria-expanded="{{ isOpen ? 'true' : 'false' }}" aria-label="{{ entry.label }}">&#9656;</a>
+                            {%- endif -%}
+                        </td>
+                    {%- endif -%}
+                    {%- block row -%}
+                        {%- for column in columns -%}
+                            {%- set cellClass = column.cellClass -%}
+                            <td{% if cellClass %} class="{{ cellClass }}"{% endif %}>{{ row.cell(column.key) }}</td>
+                        {%- endfor -%}
+                    {%- endblock -%}
+                </tr>
+                {%- if row.foldable -%}
+                    <tr class="foldrow{{ isOpen ? ' open' }}"><td colspan="{{ this.colspan }}"><div class="foldbox"><div class="fold-in">{%- block fold %}{% endblock -%}</div></div></td></tr>
+                {%- endif -%}
+            {%- else -%}
+                <tr><td class="el-none" colspan="{{ this.colspan }}">{% block empty %}{{ emptyText }}{% endblock %}</td></tr>
+            {%- endfor -%}
+        </tbody>
+    </table>
+    </div>
+</div>

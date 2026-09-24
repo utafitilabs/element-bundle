@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the UhifadhiLabs Element Module.
+ *
+ * (c) Ezekiel Mjema <https://github.com/eemjema>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+// THE MAINTAINER'S CONSOLE, not an installation's. It exists so this library
+// can run `tailwind:build` against its own input CSS; it boots the dev-only
+// BuildKernel (autoload-dev), which no installation can load. See
+// composer.json's "css:build" script, which is how it is meant to be run.
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Uhifadhi\Element\Tests\Build\BuildKernel;
+
+require __DIR__.'/../vendor/autoload.php';
+
+if (!class_exists(BuildKernel::class)) {
+    fwrite(\STDERR, "The build kernel is a dev dependency: run composer install without --no-dev.\n");
+
+    exit(1);
+}
+
+exit((new Application(new BuildKernel('dev', true)))->run());

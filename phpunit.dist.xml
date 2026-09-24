@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         cacheDirectory=".phpunit.cache"
+         colors="true"
+         failOnDeprecation="true"
+         failOnNotice="true"
+         failOnWarning="true">
+    <php>
+        <ini name="memory_limit" value="-1"/>
+        <env name="KERNEL_CLASS" value="Uhifadhi\Element\Tests\Integration\TestKernel"/>
+        <!--
+            NO DATABASE. This bundle owns no entity and remembers nothing: it is
+            a component library, and every one of its assertions is about markup
+            or about the stylesheet it ships. Where a module with tables states
+            its <NAME>_TEST_DATABASE_URL, this one states that it has none.
+        -->
+    </php>
+    <testsuites>
+        <testsuite name="default">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <source restrictNotices="true" restrictWarnings="true">
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
+</phpunit>

@@ -1,0 +1,75 @@
+{
+    "name": "uhifadhi/element-module",
+    "description": "Element: the house component library — Twig components, styled with Tailwind, that the shell and every module render their vocabulary with.",
+    "type": "symfony-bundle",
+    "keywords": [
+        "symfony-ux",
+        "twig-component",
+        "tailwind",
+        "design-system",
+        "components",
+        "symfony",
+        "uhifadhi"
+    ],
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Ezekiel Mjema",
+            "homepage": "https://github.com/eemjema"
+        }
+    ],
+    "require": {
+        "php": ">=8.4",
+        "symfony/asset": "^7.3 || ^8.0",
+        "symfony/asset-mapper": "^7.3 || ^8.0",
+        "symfony/config": "^7.3 || ^8.0",
+        "symfony/dependency-injection": "^7.3 || ^8.0",
+        "symfony/framework-bundle": "^7.3 || ^8.0",
+        "symfony/http-kernel": "^7.3 || ^8.0",
+        "symfony/twig-bundle": "^7.3 || ^8.0",
+        "symfony/ux-twig-component": "^3.5",
+        "symfonycasts/tailwind-bundle": "^1.0",
+        "twig/twig": "^3.12"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2.2",
+        "phpunit/phpunit": "^13.2",
+        "symfony/browser-kit": "^7.3 || ^8.0",
+        "symfony/css-selector": "^7.3 || ^8.0",
+        "symfony/stimulus-bundle": "^2.30 || ^3.0"
+    },
+    "suggest": {
+        "symfony/stimulus-bundle": "Registers this bundle's register-fold controller, which animates a register row folding open. Without it the fold renders, server-side open state and all, but never toggles."
+    },
+    "autoload": {
+        "psr-4": {
+            "Uhifadhi\\Element\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Uhifadhi\\Element\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "cs:fix": "php-cs-fixer fix",
+        "cs:check": "php-cs-fixer fix --dry-run --diff",
+        "css:build": [
+            "@php bin/console tailwind:build",
+            "@php -r \"copy('var/tailwind/element.built.css', 'public/element.css');\""
+        ],
+        "phpstan": "phpstan analyse --no-progress --memory-limit=1G",
+        "test": "phpunit",
+        "check": [
+            "@cs:check",
+            "@phpstan",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

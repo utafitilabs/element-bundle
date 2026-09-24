@@ -1,0 +1,203 @@
+/* ============================================================================
+   ELEMENT — THE COMPONENT LIBRARY'S STYLESHEET (Tailwind input).
+
+   `composer css:build` turns this file into public/element.css, which is what a
+   page links. Edit THIS file; the built one is an output.
+
+   NO PREFLIGHT, DELIBERATELY. Tailwind's reset is a page-wide opinion, and this
+   library is loaded INSIDE somebody else's page — a host whose own frame has
+   already decided the box model and the type. Importing theme + utilities and
+   leaving base out is Tailwind's own documented way of saying that.
+   https://tailwindcss.com/docs/preflight#disabling-preflight
+
+   THE PALETTE IS SPENT HERE AND DEFINED NEXT DOOR. Every colour below is
+   `rgb(var(--c-*))` — the house channels — and this file defines not one of
+   them. A page that already has them links this file alone; a page standing on
+   its own links element-tokens.css first. Two definitions of one colour is a
+   rendering decided by load order, which is the bug this rule exists to
+   prevent, and a test enforces it.
+
+   THE FOLD CONTRACT (ruled 2026-09-22) IS PORTED VERBATIM. Every declaration of
+   it is asserted, value by value, by tests/Unit/Stylesheet/FoldContractTest.php
+   against the BUILT file. It is not to be restyled here or anywhere.
+   ========================================================================== */
+
+@layer theme, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+
+/* `source(none)` turns Tailwind's automatic source detection OFF, and nothing
+   is put back. A library ships a BUILT sheet, and what belongs in it is this
+   library's own components — not utilities guessed from whatever words happen
+   to appear in a repository (left on, a `{% block %}` in a Twig template ships
+   a `.block` rule to every consumer). A HOST that wants utility classes runs
+   its own Tailwind build over its own templates and imports this theme, which
+   is why the theme is emitted whole — `@theme static` — rather than only where
+   it is spent here. */
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+
+/* ==================== THE THEME ====================
+   The house channels, handed to Tailwind as theme colours so a consumer can
+   write `text-fog` or `border-line` and get the SAME colour the components use.
+   The values are `rgb(var(--c-*))`, resolved by the browser at paint time, so a
+   utility follows light and dark with no second definition and no rebuild. */
+@theme static {
+    /* Tailwind's own palette and font stacks are cleared, not overridden. The
+       product has ONE palette and one type stack; shipping a second under
+       Tailwind's default names would put `text-blue-500` and a `--font-mono`
+       nobody chose within reach of every consumer, and a --font-mono defined in
+       two sheets is a typeface decided by load order. */
+    --color-*: initial;
+    --font-*: initial;
+
+    --color-canvas: rgb(var(--c-cv));
+    --color-plate-high: rgb(var(--c-p1));
+    --color-plate-low: rgb(var(--c-p2));
+    --color-raised: rgb(var(--c-raised));
+    --color-ink: rgb(var(--c-tx));
+    --color-fog: rgb(var(--c-fog));
+    --color-dim: rgb(var(--c-dim));
+    --color-accent: rgb(var(--c-acc));
+    --color-accent-ink: rgb(var(--c-accT));
+    --color-ok: rgb(var(--c-ok));
+    --color-warn: rgb(var(--c-warn));
+    --color-fail: rgb(var(--c-fail));
+    --color-fail-ink: rgb(var(--c-failT));
+    --color-crit: rgb(var(--c-crit));
+}
+
+@layer components {
+    /* ==================== THE PLATE ====================
+       The card every surface in the platform is built from, and the tab that
+       names it. The tab straddles the border, which is what makes a screen of
+       cards scannable; the trailing `.src` is the qualifier — "Positions · 7 ·
+       what each grants" — in sentence case, so the two halves read as label and
+       note rather than as one shout. */
+    .c {
+        background: linear-gradient(180deg, rgb(var(--c-p1)), rgb(var(--c-p2)));
+        border: 1px solid var(--c-ln);
+        border-radius: 14px;
+        padding: 24px 16px 14px;
+        position: relative;
+        box-shadow: var(--shadow);
+        box-sizing: border-box;
+    }
+
+    .c > .tab {
+        position: absolute; top: -9px; left: 13px; z-index: 2;
+        background: rgb(var(--c-cv)); border: 1px solid var(--c-ln2); border-radius: 7px;
+        padding: 3px 10px;
+        font-family: var(--font-mono); font-size: 9.5px; font-weight: 600;
+        letter-spacing: .18em; text-transform: uppercase; color: rgb(var(--c-fog));
+        display: flex; gap: 8px; align-items: center;
+        white-space: nowrap; max-width: 92%; overflow: hidden;
+    }
+
+    .c > .tab .src { letter-spacing: .03em; color: rgb(var(--c-dim)); text-transform: none; }
+
+    /* A REGISTER IS A CARD WITH ONE TABLE IN IT and nothing else — no widgets,
+       no add form (ruled 2026-09-22: creating lives on the section's configure
+       page). The card is opaque and the table runs to its edges, so the frame
+       reads as the register's rather than as a panel the register sits on. */
+    /* `min-width: 0` IS LOAD-BEARING. A grid or flex item defaults to
+       `min-width: auto`, so a register placed in one would be widened by its
+       own table until the PAGE scrolled sideways — the card pushing the layout
+       out instead of the table scrolling inside it. */
+    .el-reg { padding: 24px 16px 14px; min-width: 0; }
+
+    /* THE TABLE SCROLLS, THE CARD NEVER DOES. A card with `overflow: hidden`
+       clips its own tab, which straddles the top border on purpose; a card with
+       `overflow-x: auto` clips it too. So the horizontal overflow lives on a
+       wrapper INSIDE the card, and at phone width the register keeps its
+       columns and scrolls sideways rather than reflowing into a stack that no
+       longer reads as a register. */
+    .el-scroll { overflow-x: auto; min-width: 0; }
+
+    /* WHAT AN EMPTY REGISTER SAYS. A register with nothing in it states the
+       fact; it does not draw an empty table and leave the reader to work it
+       out. */
+    .el-none { color: rgb(var(--c-dim)); font-style: italic; padding: 18px 14px; }
+
+    /* ==================== THE REGISTER TABLE ====================
+       Header cells are mono small-caps and LEFT aligned; the browser's centred
+       bold default is the single loudest thing on an unstyled page. Numbers are
+       mono and right-aligned through `.num`, so a column of them can be
+       compared by eye. */
+    table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+
+    table.tbl th {
+        font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase;
+        color: rgb(var(--c-fog)); text-align: left; padding: 8px 10px;
+        border-bottom: 1px solid var(--c-ln2); font-weight: 600;
+    }
+
+    table.tbl td {
+        padding: 9px 10px;
+        border-bottom: 1px dashed color-mix(in srgb, rgb(var(--c-fog)) 18%, transparent);
+        font-variant-numeric: tabular-nums;
+    }
+
+    table.tbl tr:hover td { background: color-mix(in srgb, rgb(var(--c-acc)) 4%, transparent); }
+
+    /* A ROW'S LINK IS THE ROW'S SUBJECT, so it carries weight the base rule
+       does not give it; the colour and the underline are the base rule's. */
+    table.tbl a { font-weight: 600; }
+
+    /* A SORTABLE HEADER IS A LINK (ruled 2026-09-22: every register sorts). It
+       keeps the header's own ink — a coloured header would read as a filter —
+       and the sorted column alone says so, with the direction as a mark. */
+    table.tbl th a { color: inherit; font-weight: inherit; text-decoration: none; }
+    table.tbl th a:hover { color: rgb(var(--c-tx)); }
+    table.tbl th.sorted { color: rgb(var(--c-tx)); }
+    table.tbl th.sorted::after { content: " \25BE"; color: rgb(var(--c-acc)); }
+    table.tbl th.sorted[aria-sort="descending"]::after { content: " \25B4"; }
+
+    /* ---- A REGISTER ROW THAT FOLDS OPEN (ruled 2026-09-22, the fold contract)
+       Markup: the folding row carries `data-fold-id` and a chevron cell; ONE
+       `tr.foldrow` follows it holding `.foldbox > .fold-in > content`. The
+       header row draws NO rule; the fold row carries the house dashed rule in
+       BOTH states (1px tall while shut), so opening only grows the panel above
+       a rule that never moves. The panel's spacing is the content's MARGIN
+       inside the clipped track — never padding on the track, which would zero
+       and jump. The track eases 0fr → 1fr over 600ms; the chevron turns on the
+       same curve. The click is the `register-fold` controller's; the open set
+       rides in the address. */
+    table.tbl .fchev-h { width: 22px; }
+    table.tbl td.fchev-c { width: 22px; padding-right: 0; }
+
+    .fchev {
+        display: inline-block; width: 14px; color: rgb(var(--c-dim)); font-size: 11px; text-decoration: none;
+        transition: transform .6s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .fchev:hover { color: rgb(var(--c-tx)); }
+    table.tbl tr.open .fchev { transform: rotate(90deg); }
+    table.tbl tr[data-fold-id] td { border-bottom: 0; }
+
+    table.tbl tr.foldrow td {
+        padding: 0 14px 0 36px;
+        border-bottom: 1px dashed color-mix(in srgb, rgb(var(--c-fog)) 18%, transparent);
+        background: color-mix(in srgb, rgb(var(--c-fog)) 4%, transparent);
+    }
+
+    table.tbl tr.foldrow:hover td { background: color-mix(in srgb, rgb(var(--c-fog)) 4%, transparent); }
+    table.tbl tr.foldrow .foldbox { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s cubic-bezier(.4, 0, .2, 1); }
+    table.tbl tr.foldrow.open .foldbox { grid-template-rows: 1fr; }
+    table.tbl tr.foldrow .fold-in { overflow: hidden; min-height: 0; }
+    table.tbl tr.foldrow .fold-in > * { margin: 12px 0 16px; }
+
+    table.tbl .num { text-align: right; font-family: var(--font-mono); }
+    table.tbl td.num { font-size: 12px; }
+
+    /* NO ROW BORDER ABOVE A CARD'S FOOT (rule 2026-09-21) — and a register's
+       foot is the card's own bottom edge, so the last row gives its rule up. */
+    table.tbl tbody tr:last-child td { border-bottom: 0; }
+
+    /* ---- AT PHONE WIDTH the table keeps its columns and scrolls sideways
+       inside the card, rather than reflowing into a stack that no longer reads
+       as a register. The card never scrolls; the table does. */
+    @media (max-width: 560px) {
+        .el-reg { padding: 24px 10px 12px; }
+        .el-scroll table.tbl { min-width: 480px; }
+    }
+}
