@@ -10,12 +10,13 @@
    leaving base out is Tailwind's own documented way of saying that.
    https://tailwindcss.com/docs/preflight#disabling-preflight
 
-   THE PALETTE IS SPENT HERE AND DEFINED NEXT DOOR. Every colour below is
-   `rgb(var(--c-*))` — the theme channels — and this file defines not one of
-   them. A page that already has them links this file alone; a page standing on
-   its own links element-tokens.css first. Two definitions of one colour is a
-   rendering decided by load order, which is the bug this rule exists to
-   prevent, and a test enforces it.
+   THE PALETTE IS SPENT HERE AND DEFINED IN THE HOST'S CONFIGURATION. Every
+   colour, both type stacks, the corner radius and the control height below are
+   `var(--e-*)`, and this file defines not one of them: the values come from
+   `element.theme` in the consuming application's config/packages/element.yaml,
+   rendered into the page by `element_theme()`. That is how one built stylesheet
+   serves every product — they differ by colour and by type, and the difference
+   is configuration. A test enforces that this file defines no channel.
 
    THE FOLD CONTRACT (ruled 2026-09-22) IS PORTED VERBATIM. Every declaration of
    it is asserted, value by value, by tests/Unit/Stylesheet/FoldContractTest.php
@@ -37,10 +38,11 @@
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
 
 /* ==================== THE THEME ====================
-   The theme channels, handed to Tailwind as theme colours so a consumer can
-   write `text-fog` or `border-line` and get the SAME colour the components use.
-   The values are `rgb(var(--c-*))`, resolved by the browser at paint time, so a
-   utility follows light and dark with no second definition and no rebuild. */
+   The channels, handed to Tailwind as theme colours so a consumer's own
+   Tailwind build can write `text-muted` or `bg-ground` and get the SAME colour
+   the components use. The values are `var(--e-*)`, resolved by the browser at
+   paint time, so a utility follows the configured theme — light and dark alike
+   — with no second definition and no rebuild. */
 @theme static {
     /* Tailwind's own palette and font stacks are cleared, not overridden. The
        product has ONE palette and one type stack; shipping a second under
@@ -50,20 +52,23 @@
     --color-*: initial;
     --font-*: initial;
 
-    --color-canvas: rgb(var(--c-cv));
-    --color-plate-high: rgb(var(--c-p1));
-    --color-plate-low: rgb(var(--c-p2));
-    --color-raised: rgb(var(--c-raised));
-    --color-ink: rgb(var(--c-tx));
-    --color-fog: rgb(var(--c-fog));
-    --color-dim: rgb(var(--c-dim));
-    --color-accent: rgb(var(--c-acc));
-    --color-accent-ink: rgb(var(--c-accT));
-    --color-ok: rgb(var(--c-ok));
-    --color-warn: rgb(var(--c-warn));
-    --color-fail: rgb(var(--c-fail));
-    --color-fail-ink: rgb(var(--c-failT));
-    --color-crit: rgb(var(--c-crit));
+    --font-ui: var(--e-font-ui);
+    --font-mono: var(--e-font-mono);
+
+    --color-ground: var(--e-ground);
+    --color-surface: var(--e-surface);
+    --color-surface-low: var(--e-surface-low);
+    --color-raised: var(--e-raised);
+    --color-ink: var(--e-ink);
+    --color-muted: var(--e-muted);
+    --color-faint: var(--e-faint);
+    --color-accent: var(--e-accent);
+    --color-accent-ink: var(--e-accent-ink);
+    --color-ok: var(--e-ok);
+    --color-warn: var(--e-warn);
+    --color-danger: var(--e-danger);
+    --color-danger-ink: var(--e-danger-ink);
+    --color-critical: var(--e-critical);
 }
 
 @layer components {
@@ -74,26 +79,26 @@
        what each grants" — in sentence case, so the two halves read as label and
        note rather than as one shout. */
     .c {
-        background: linear-gradient(180deg, rgb(var(--c-p1)), rgb(var(--c-p2)));
-        border: 1px solid var(--c-ln);
-        border-radius: 14px;
+        background: linear-gradient(180deg, var(--e-surface), var(--e-surface-low));
+        border: 1px solid var(--e-line);
+        border-radius: var(--e-radius);
         padding: 24px 16px 14px;
         position: relative;
-        box-shadow: var(--shadow);
+        box-shadow: var(--e-shadow);
         box-sizing: border-box;
     }
 
     .c > .tab {
         position: absolute; top: -9px; left: 13px; z-index: 2;
-        background: rgb(var(--c-cv)); border: 1px solid var(--c-ln2); border-radius: 7px;
+        background: var(--e-ground); border: 1px solid var(--e-line-strong); border-radius: 7px;
         padding: 3px 10px;
-        font-family: var(--font-mono); font-size: 9.5px; font-weight: 600;
-        letter-spacing: .18em; text-transform: uppercase; color: rgb(var(--c-fog));
+        font-family: var(--e-font-mono); font-size: 9.5px; font-weight: 600;
+        letter-spacing: .18em; text-transform: uppercase; color: var(--e-muted);
         display: flex; gap: 8px; align-items: center;
         white-space: nowrap; max-width: 92%; overflow: hidden;
     }
 
-    .c > .tab .src { letter-spacing: .03em; color: rgb(var(--c-dim)); text-transform: none; }
+    .c > .tab .src { letter-spacing: .03em; color: var(--e-faint); text-transform: none; }
 
     /* A REGISTER IS A CARD WITH ONE TABLE IN IT and nothing else — no widgets,
        no add form (ruled 2026-09-22: creating lives on the section's configure
@@ -116,7 +121,7 @@
     /* WHAT AN EMPTY REGISTER SAYS. A register with nothing in it states the
        fact; it does not draw an empty table and leave the reader to work it
        out. */
-    .el-none { color: rgb(var(--c-dim)); font-style: italic; padding: 18px 14px; }
+    .el-none { color: var(--e-faint); font-style: italic; padding: 18px 14px; }
 
     /* ==================== THE REGISTER TABLE ====================
        Header cells are mono small-caps and LEFT aligned; the browser's centred
@@ -126,18 +131,18 @@
     table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 
     table.tbl th {
-        font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase;
-        color: rgb(var(--c-fog)); text-align: left; padding: 8px 10px;
-        border-bottom: 1px solid var(--c-ln2); font-weight: 600;
+        font-family: var(--e-font-mono); font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase;
+        color: var(--e-muted); text-align: left; padding: 8px 10px;
+        border-bottom: 1px solid var(--e-line-strong); font-weight: 600;
     }
 
     table.tbl td {
         padding: 9px 10px;
-        border-bottom: 1px dashed color-mix(in srgb, rgb(var(--c-fog)) 18%, transparent);
+        border-bottom: 1px dashed color-mix(in srgb, var(--e-muted) 18%, transparent);
         font-variant-numeric: tabular-nums;
     }
 
-    table.tbl tr:hover td { background: color-mix(in srgb, rgb(var(--c-acc)) 4%, transparent); }
+    table.tbl tr:hover td { background: color-mix(in srgb, var(--e-accent) 4%, transparent); }
 
     /* A ROW'S LINK IS THE ROW'S SUBJECT, so it carries weight the base rule
        does not give it; the colour and the underline are the base rule's. */
@@ -147,9 +152,9 @@
        keeps the header's own ink — a coloured header would read as a filter —
        and the sorted column alone says so, with the direction as a mark. */
     table.tbl th a { color: inherit; font-weight: inherit; text-decoration: none; }
-    table.tbl th a:hover { color: rgb(var(--c-tx)); }
-    table.tbl th.sorted { color: rgb(var(--c-tx)); }
-    table.tbl th.sorted::after { content: " \25BE"; color: rgb(var(--c-acc)); }
+    table.tbl th a:hover { color: var(--e-ink); }
+    table.tbl th.sorted { color: var(--e-ink); }
+    table.tbl th.sorted::after { content: " \25BE"; color: var(--e-accent); }
     table.tbl th.sorted[aria-sort="descending"]::after { content: " \25B4"; }
 
     /* ---- A REGISTER ROW THAT FOLDS OPEN (ruled 2026-09-22, the fold contract)
@@ -166,27 +171,27 @@
     table.tbl td.fchev-c { width: 22px; padding-right: 0; }
 
     .fchev {
-        display: inline-block; width: 14px; color: rgb(var(--c-dim)); font-size: 11px; text-decoration: none;
+        display: inline-block; width: 14px; color: var(--e-faint); font-size: 11px; text-decoration: none;
         transition: transform .6s cubic-bezier(.4, 0, .2, 1);
     }
 
-    .fchev:hover { color: rgb(var(--c-tx)); }
+    .fchev:hover { color: var(--e-ink); }
     table.tbl tr.open .fchev { transform: rotate(90deg); }
     table.tbl tr[data-fold-id] td { border-bottom: 0; }
 
     table.tbl tr.foldrow td {
         padding: 0 14px 0 36px;
-        border-bottom: 1px dashed color-mix(in srgb, rgb(var(--c-fog)) 18%, transparent);
-        background: color-mix(in srgb, rgb(var(--c-fog)) 4%, transparent);
+        border-bottom: 1px dashed color-mix(in srgb, var(--e-muted) 18%, transparent);
+        background: color-mix(in srgb, var(--e-muted) 4%, transparent);
     }
 
-    table.tbl tr.foldrow:hover td { background: color-mix(in srgb, rgb(var(--c-fog)) 4%, transparent); }
+    table.tbl tr.foldrow:hover td { background: color-mix(in srgb, var(--e-muted) 4%, transparent); }
     table.tbl tr.foldrow .foldbox { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s cubic-bezier(.4, 0, .2, 1); }
     table.tbl tr.foldrow.open .foldbox { grid-template-rows: 1fr; }
     table.tbl tr.foldrow .fold-in { overflow: hidden; min-height: 0; }
     table.tbl tr.foldrow .fold-in > * { margin: 12px 0 16px; }
 
-    table.tbl .num { text-align: right; font-family: var(--font-mono); }
+    table.tbl .num { text-align: right; font-family: var(--e-font-mono); }
     table.tbl td.num { font-size: 12px; }
 
     /* NO ROW BORDER ABOVE A CARD'S FOOT (rule 2026-09-21) — and a register's

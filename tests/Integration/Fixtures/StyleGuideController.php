@@ -16,6 +16,7 @@ namespace UtafitiLabs\ElementBundle\Tests\Integration\Fixtures;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
+use UtafitiLabs\ElementBundle\DependencyInjection\ElementConfiguration;
 
 /**
  * THE STYLE GUIDE — every component this library ships, rendered with sample
@@ -47,6 +48,8 @@ final class StyleGuideController
 
         return new Response($this->twig->render('@Fixtures/style-guide.html.twig', [
             'open' => \is_string($open) ? $open : '',
+            'dark' => 'dark' === $request->query->get('theme'),
+            'hues' => \count(ElementConfiguration::hues()),
             'sort' => 'depth',
             'columns' => [
                 ['key' => 'berth', 'label' => 'Berth', 'sortUrl' => '?sort=berth'],

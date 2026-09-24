@@ -89,6 +89,14 @@ final class TestKernel extends Kernel
             'paths' => [__DIR__.'/Fixtures/templates' => 'Fixtures'],
         ]);
 
+        // StimulusBundle reads the project's assets/controllers.json, which a
+        // LIBRARY has not got — and cannot have: the file names installed
+        // packages, and this package is not installed in its own vendor. So the
+        // kernel is pointed at an empty one; what the bundle publishes is
+        // asserted from the manifest itself, in
+        // tests/Unit/Asset/FoldControllerSeamTest.php.
+        $container->extension('stimulus', ['controllers_json' => __DIR__.'/Fixtures/controllers.json']);
+
         $services = $container->services();
 
         // The style guide. A controller extends nothing and takes what it needs

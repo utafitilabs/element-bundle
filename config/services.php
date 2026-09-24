@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use UtafitiLabs\ElementBundle\Theme\ThemeStyleService;
 use UtafitiLabs\ElementBundle\Twig\Components\Table;
+use UtafitiLabs\ElementBundle\Twig\ElementExtension;
+use UtafitiLabs\ElementBundle\Twig\ThemeRuntime;
 
 /*
  * EXPLICIT DI, AS A REUSABLE BUNDLE MUST.
@@ -41,6 +44,33 @@ use UtafitiLabs\ElementBundle\Twig\Components\Table;
  */
 return static function (ContainerConfigurator $container): void {
     $container->services()
+
+        // THE THEME, OUT OF THE HOST'S OWN CONFIGURATION. Every value the
+        // shipped stylesheet paints with arrives here as a parameter, so the
+        // library is themed without a second stylesheet and without a build.
+        ->set('element.theme.style', ThemeStyleService::class)
+            ->args([
+                param('element.theme.colors'),
+                param('element.theme.dark.colors'),
+                param('element.theme.hues'),
+                param('element.theme.dark.hues'),
+                param('element.theme.fonts'),
+                param('element.theme.shadow'),
+                param('element.theme.dark.shadow'),
+                param('element.theme.radius'),
+                param('element.theme.control_height'),
+            ])
+
+        // `element_theme()`. The extension is the declaration and the runtime is
+        // the work, tagged by hand because a reusable bundle does not
+        // autoconfigure: `twig.runtime` is what TwigBundle's RuntimeLoaderPass
+        // reads, and without it Twig cannot instantiate the runtime at all.
+        ->set('element.twig.extension', ElementExtension::class)
+            ->tag('twig.extension')
+
+        ->set('element.twig.runtime.theme', ThemeRuntime::class)
+            ->args([service('element.theme.style')])
+            ->tag('twig.runtime')
 
         // The register. TwigComponentPass marks every tagged component
         // not-shared, so one page may draw as many tables as it likes.

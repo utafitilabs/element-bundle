@@ -45,16 +45,14 @@ final class UtafitiLabsElementBundle extends AbstractBundle
      * AssetMapper serves the bundle's public/ directory under
      * `bundles/<lowercased bundle name>/` with no configuration and no
      * assets:install.
+     *
+     * IT DEFINES NO VALUE OF ITS OWN. Every colour, both type stacks, the
+     * radius and the control height come from the custom properties
+     * `element_theme()` writes into the page out of `element.theme` — so this
+     * one file is what every product that installs the library links, and the
+     * products differ by their configuration.
      */
     public const string STYLESHEET = 'bundles/utafitilabselement/element.css';
-
-    /**
-     * THE PALETTE, FOR A PAGE THAT HAS NO OTHER SOURCE OF IT. The components
-     * SPEND the theme channels (`rgb(var(--c-acc))`) and define none, so a page
-     * that already has them links {@see self::STYLESHEET} alone and nothing is
-     * defined twice. A page standing on its own links this first.
-     */
-    public const string TOKENS_STYLESHEET = 'bundles/utafitilabselement/element-tokens.css';
 
     /**
      * Flex keys `assets/controllers.json` by `'@'.<composer package name>` and
@@ -154,6 +152,49 @@ final class UtafitiLabsElementBundle extends AbstractBundle
             \is_string($table['empty_text'] ?? null) ? $table['empty_text'] : ElementConfiguration::DEFAULT_EMPTY_TEXT,
         );
 
+        // THE THEME, STRAIGHT OUT OF THE PROCESSED CONFIGURATION. "the $config
+        // variable is already merged and processed so you can use it directly
+        // to configure the service container"
+        // (https://symfony.com/doc/current/bundles/configuration.html), and
+        // every node of the theme has a default, so each of these is present.
+        $theme = \is_array($config['theme'] ?? null) ? $config['theme'] : [];
+        $dark = \is_array($theme['dark'] ?? null) ? $theme['dark'] : [];
+
+        $builder->setParameter('element.theme.colors', self::map($theme['colors'] ?? null));
+        $builder->setParameter('element.theme.hues', self::map($theme['hues'] ?? null));
+        $builder->setParameter('element.theme.fonts', self::map($theme['fonts'] ?? null));
+        $builder->setParameter('element.theme.shadow', self::text($theme['shadow'] ?? null));
+        $builder->setParameter('element.theme.radius', self::text($theme['radius'] ?? null));
+        $builder->setParameter('element.theme.control_height', self::text($theme['control_height'] ?? null));
+        $builder->setParameter('element.theme.dark.colors', self::map($dark['colors'] ?? null));
+        $builder->setParameter('element.theme.dark.hues', self::map($dark['hues'] ?? null));
+        $builder->setParameter('element.theme.dark.shadow', self::text($dark['shadow'] ?? null));
+
         $container->import('../config/services.php');
+    }
+
+    /**
+     * Every node of the theme has a default, so these narrowings never fire —
+     * they are here because a container parameter has a type and a processed
+     * configuration array does not.
+     *
+     * @return array<string, string>
+     */
+    private static function map(mixed $value): array
+    {
+        $strings = [];
+
+        foreach (\is_array($value) ? $value : [] as $key => $one) {
+            if (\is_string($key) && \is_string($one)) {
+                $strings[$key] = $one;
+            }
+        }
+
+        return $strings;
+    }
+
+    private static function text(mixed $value): string
+    {
+        return \is_string($value) ? $value : '';
     }
 }

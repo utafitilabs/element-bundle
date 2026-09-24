@@ -15,6 +15,7 @@ namespace UtafitiLabs\ElementBundle\Tests\Unit\Stylesheet;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use UtafitiLabs\ElementBundle\Tests\Support\ProcessedTheme;
 use UtafitiLabs\ElementBundle\UtafitiLabsElementBundle;
 
 /**
@@ -66,10 +67,10 @@ final class FoldContractTest extends TestCase
             'table.tbl tr.foldrow td { padding: 0 14px 0 36px;',
         ];
         yield 'and carries the dashed rule in both states' => [
-            'border-bottom: 1px dashed color-mix(in srgb, rgb(var(--c-fog)) 18%, transparent);',
+            'border-bottom: 1px dashed color-mix(in srgb, var(--e-muted) 18%, transparent);',
         ];
         yield 'on its own quiet ground' => [
-            'background: color-mix(in srgb, rgb(var(--c-fog)) 4%, transparent);',
+            'background: color-mix(in srgb, var(--e-muted) 4%, transparent);',
         ];
         yield 'the chevron column is 22px on both rows' => [
             'table.tbl .fchev-h { width: 22px; }',
@@ -99,8 +100,8 @@ final class FoldContractTest extends TestCase
 
         foreach ([
             'table.tbl th a { color: inherit; font-weight: inherit; text-decoration: none; }',
-            'table.tbl th.sorted { color: rgb(var(--c-tx)); }',
-            'table.tbl th.sorted::after { content: " \\25BE"; color: rgb(var(--c-acc)); }',
+            'table.tbl th.sorted { color: var(--e-ink); }',
+            'table.tbl th.sorted::after { content: " \\25BE"; color: var(--e-accent); }',
             'table.tbl th.sorted[aria-sort="descending"]::after { content: " \\25B4"; }',
         ] as $declaration) {
             self::assertStringContainsString(self::collapse($declaration), $css);
@@ -108,30 +109,33 @@ final class FoldContractTest extends TestCase
     }
 
     /**
-     * THE PALETTE IS NOT REDEFINED BY THE COMPONENT SHEET. A page that loads a
-     * second definition of `--c-acc` gets whichever sheet landed last, which is
-     * a rendering decided by load order. The channels live in ONE file
-     * (element-tokens.css, for a page with no other source of them) and the
-     * component sheet only ever spends them.
+     * THE COMPONENT SHEET DEFINES NO VALUE OF ITS OWN. A page that loaded a
+     * second definition of `--e-accent` would get whichever sheet landed last,
+     * which is a rendering decided by load order. The values live in ONE place —
+     * the host's `element.theme` configuration, rendered by `element_theme()` —
+     * and this sheet only ever spends them.
      */
     public function testTheComponentSheetSpendsTheChannelsAndDefinesNone(): void
     {
         $css = self::builtStylesheet();
 
-        self::assertStringContainsString('var(--c-acc)', $css, 'The components are painted from the theme channels.');
-        self::assertDoesNotMatchRegularExpression('/--c-[a-zA-Z0-9]+\s*:/', $css, 'Only the token sheet defines a --c-* channel.');
+        self::assertStringContainsString('var(--e-accent)', $css, 'The components are painted from the configured channels.');
+        self::assertDoesNotMatchRegularExpression('/--e-[a-z-]+\s*:/', $css, 'Only the theme block defines a --e-* value.');
     }
 
-    public function testTheTokenSheetDefinesEveryChannelTheComponentSheetSpends(): void
+    /**
+     * AND THE THEME BLOCK DEFINES EVERY ONE OF THEM. A property the sheet spends
+     * and the configuration never states paints with nothing at all, in silence.
+     */
+    public function testTheThemeBlockDefinesEveryPropertyTheComponentSheetSpends(): void
     {
-        $tokens = file_get_contents(\dirname(__DIR__, 3).'/public/'.basename(UtafitiLabsElementBundle::TOKENS_STYLESHEET));
-        self::assertIsString($tokens);
+        $theme = ProcessedTheme::service()->css();
 
-        preg_match_all('/var\((--c-[a-zA-Z0-9]+)/', self::builtStylesheet(), $matches);
+        preg_match_all('/var\((--e-[a-z-]+)/', self::builtStylesheet(), $matches);
         self::assertNotEmpty($matches[1]);
 
-        foreach (array_unique($matches[1]) as $channel) {
-            self::assertMatchesRegularExpression('/'.preg_quote($channel, '/').'\s*:/', $tokens, $channel.' is spent by a component and defined by nobody.');
+        foreach (array_unique($matches[1]) as $property) {
+            self::assertStringContainsString($property.':', $theme, $property.' is spent by a component and defined by nobody.');
         }
     }
 

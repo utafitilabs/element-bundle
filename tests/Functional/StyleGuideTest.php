@@ -27,19 +27,33 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 final class StyleGuideTest extends KernelTestCase
 {
-    public function testTheGuideRendersEveryComponentAndLinksBothStylesheets(): void
+    public function testTheGuideRendersEveryComponentAndWearsTheConfiguredTheme(): void
     {
         $html = $this->guide();
 
-        // AssetMapper content-versions the filename, so the assertion is on the
-        // path the bundle publishes rather than on the digest of the day.
-        self::assertMatchesRegularExpression('#href="[^"]*bundles/utafitilabselement/element-tokens-[^"]+\.css"#', $html, 'A page with no other source of the theme channels links the tokens first.');
+        // THE WHOLE OF WHAT A CONSUMING APPLICATION DOES: the theme block, then
+        // the one stylesheet that spends it. AssetMapper content-versions the
+        // filename, so the assertion is on the path the bundle publishes rather
+        // than on the digest of the day.
+        self::assertStringContainsString('--e-accent: rgb(15 138 104);', $html, 'The theme is written into the page by element_theme().');
+        self::assertStringContainsString('--e-hue-1: var(--e-hue-moss);', $html);
         self::assertMatchesRegularExpression('#href="[^"]*bundles/utafitilabselement/element-[A-Za-z0-9_-]+\.css"#', $html);
+        self::assertLessThan(
+            strpos($html, 'bundles/utafitilabselement/element-'),
+            strpos($html, '--e-accent:'),
+            'The values come before the sheet that spends them.',
+        );
 
         // The folding register, the flat one and the empty one.
         self::assertStringContainsString('<span class="tab">Berths<span class="src">· 3 · how deep it is, and what is moored there</span></span>', $html);
         self::assertStringContainsString('<span class="tab">Quays</span>', $html);
         self::assertStringContainsString('Nothing here yet.', $html);
+    }
+
+    public function testTheDarkPaletteIsTheSamePageWithTheClassOnIt(): void
+    {
+        self::assertStringContainsString('<html lang="en" class="dark">', $this->guide('?theme=dark'));
+        self::assertStringContainsString('html.dark {', $this->guide(), 'Both palettes are written whichever one is showing.');
     }
 
     public function testTheGuideOpensTheRowsTheAddressNames(): void

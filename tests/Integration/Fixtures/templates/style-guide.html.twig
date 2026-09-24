@@ -2,31 +2,37 @@
     THE STYLE GUIDE. One page, every component, sample rows — the page a
     maintainer opens and the page the functional suite reads.
 
-    It links BOTH stylesheets, in the order a page with no other source of the
-    theme channels must: the tokens first, the components after. A page drawn
-    inside an application that already publishes the channels links the second
-    alone.
+    IT LINKS ONE STYLESHEET AND CALLS ONE FUNCTION, which is the whole of what a
+    consuming application does: `element_theme()` writes the configured theme
+    into the head, BEFORE the sheet that spends it, and the sheet itself carries
+    no value of its own. `?theme=dark` puts the class on <html> that the dark
+    palette hangs from — an application puts it there before the first paint.
 #}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"{% if dark %} class="dark"{% endif %}>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Element — style guide</title>
-    <link rel="stylesheet" href="{{ asset(constant('UtafitiLabs\\ElementBundle\\UtafitiLabsElementBundle::TOKENS_STYLESHEET')) }}">
+    {{ element_theme() }}
     <link rel="stylesheet" href="{{ asset(constant('UtafitiLabs\\ElementBundle\\UtafitiLabsElementBundle::STYLESHEET')) }}">
     <style>
-        body { background: rgb(var(--c-cv)); color: rgb(var(--c-tx)); font-family: var(--font-body); margin: 0; padding: 40px 16px; }
+        body { background: var(--e-ground); color: var(--e-ink); font-family: var(--e-font-ui); margin: 0; padding: 40px 16px; }
         main { max-width: 980px; margin: 0 auto; display: grid; gap: 40px; }
-        h1 { font-family: var(--font-display); font-size: 20px; margin: 0; }
-        p.lede { color: rgb(var(--c-fog)); font-size: 13px; margin: 6px 0 0; }
+        h1 { font-size: 20px; margin: 0; }
+        p.lede { color: var(--e-muted); font-size: 13px; margin: 6px 0 0; }
+        a.swap { color: var(--e-accent); font-size: 12px; }
+        ul.hues { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; }
+        ul.hues li { height: var(--e-control-height); min-width: 56px; display: grid; place-items: center;
+                     border-radius: 6px; font-family: var(--e-font-mono); font-size: 10px; color: var(--e-ground); }
     </style>
 </head>
 <body>
 <main>
     <header>
         <h1>Element</h1>
-        <p class="lede">The component library. Every component below is what a consuming application renders, unchanged.</p>
+        <p class="lede">The component library, themed from configuration. Every component below is what a consuming application renders, unchanged.</p>
+        <p><a class="swap" href="?theme={{ dark ? 'light' : 'dark' }}">{{ dark ? 'Light' : 'Dark' }}</a></p>
     </header>
 
     {# THE REGISTER, FOLDING. Rows fold onto a panel; the address says which. #}
@@ -52,6 +58,14 @@
 
     {# AND WITH NOTHING IN IT. An empty register states the fact. #}
     <twig:Element:Table title="Vacancies" :columns="[{ key: 'berth', label: 'Berth' }]" :rows="[]" />
+
+    {# THE CATEGORICAL HUES, by index — which is how a series is coloured. #}
+    <div class="c">
+        <span class="tab">Hues<span class="src">· {{ hues }} · for telling categories apart</span></span>
+        <ul class="hues">
+            {% for i in 1..hues %}<li style="background: var(--e-hue-{{ i }})">{{ i }}</li>{% endfor %}
+        </ul>
+    </div>
 </main>
 </body>
 </html>

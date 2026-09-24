@@ -2,31 +2,33 @@
 @layer theme, components, utilities;
 @layer theme {
   :root, :host {
-    --color-canvas: rgb(var(--c-cv));
-    --color-plate-high: rgb(var(--c-p1));
-    --color-plate-low: rgb(var(--c-p2));
-    --color-raised: rgb(var(--c-raised));
-    --color-ink: rgb(var(--c-tx));
-    --color-fog: rgb(var(--c-fog));
-    --color-dim: rgb(var(--c-dim));
-    --color-accent: rgb(var(--c-acc));
-    --color-accent-ink: rgb(var(--c-accT));
-    --color-ok: rgb(var(--c-ok));
-    --color-warn: rgb(var(--c-warn));
-    --color-fail: rgb(var(--c-fail));
-    --color-fail-ink: rgb(var(--c-failT));
-    --color-crit: rgb(var(--c-crit));
+    --font-ui: var(--e-font-ui);
+    --font-mono: var(--e-font-mono);
+    --color-ground: var(--e-ground);
+    --color-surface: var(--e-surface);
+    --color-surface-low: var(--e-surface-low);
+    --color-raised: var(--e-raised);
+    --color-ink: var(--e-ink);
+    --color-muted: var(--e-muted);
+    --color-faint: var(--e-faint);
+    --color-accent: var(--e-accent);
+    --color-accent-ink: var(--e-accent-ink);
+    --color-ok: var(--e-ok);
+    --color-warn: var(--e-warn);
+    --color-danger: var(--e-danger);
+    --color-danger-ink: var(--e-danger-ink);
+    --color-critical: var(--e-critical);
   }
 }
 @layer utilities;
 @layer components {
   .c {
-    background: linear-gradient(180deg, rgb(var(--c-p1)), rgb(var(--c-p2)));
-    border: 1px solid var(--c-ln);
-    border-radius: 14px;
+    background: linear-gradient(180deg, var(--e-surface), var(--e-surface-low));
+    border: 1px solid var(--e-line);
+    border-radius: var(--e-radius);
     padding: 24px 16px 14px;
     position: relative;
-    box-shadow: var(--shadow);
+    box-shadow: var(--e-shadow);
     box-sizing: border-box;
   }
   .c > .tab {
@@ -34,16 +36,16 @@
     top: -9px;
     left: 13px;
     z-index: 2;
-    background: rgb(var(--c-cv));
-    border: 1px solid var(--c-ln2);
+    background: var(--e-ground);
+    border: 1px solid var(--e-line-strong);
     border-radius: 7px;
     padding: 3px 10px;
-    font-family: var(--font-mono);
+    font-family: var(--e-font-mono);
     font-size: 9.5px;
     font-weight: 600;
     letter-spacing: .18em;
     text-transform: uppercase;
-    color: rgb(var(--c-fog));
+    color: var(--e-muted);
     display: flex;
     gap: 8px;
     align-items: center;
@@ -53,7 +55,7 @@
   }
   .c > .tab .src {
     letter-spacing: .03em;
-    color: rgb(var(--c-dim));
+    color: var(--e-faint);
     text-transform: none;
   }
   .el-reg {
@@ -65,7 +67,7 @@
     min-width: 0;
   }
   .el-none {
-    color: rgb(var(--c-dim));
+    color: var(--e-faint);
     font-style: italic;
     padding: 18px 14px;
   }
@@ -75,28 +77,28 @@
     font-size: 13.5px;
   }
   table.tbl th {
-    font-family: var(--font-mono);
+    font-family: var(--e-font-mono);
     font-size: 9.5px;
     letter-spacing: .16em;
     text-transform: uppercase;
-    color: rgb(var(--c-fog));
+    color: var(--e-muted);
     text-align: left;
     padding: 8px 10px;
-    border-bottom: 1px solid var(--c-ln2);
+    border-bottom: 1px solid var(--e-line-strong);
     font-weight: 600;
   }
   table.tbl td {
     padding: 9px 10px;
-    border-bottom: 1px dashed rgb(var(--c-fog));
+    border-bottom: 1px dashed var(--e-muted);
     @supports (color: color-mix(in lab, red, red)) {
-      border-bottom: 1px dashed color-mix(in srgb, rgb(var(--c-fog)) 18%, transparent);
+      border-bottom: 1px dashed color-mix(in srgb, var(--e-muted) 18%, transparent);
     }
     font-variant-numeric: tabular-nums;
   }
   table.tbl tr:hover td {
-    background: rgb(var(--c-acc));
+    background: var(--e-accent);
     @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, rgb(var(--c-acc)) 4%, transparent);
+      background: color-mix(in srgb, var(--e-accent) 4%, transparent);
     }
   }
   table.tbl a {
@@ -108,14 +110,14 @@
     text-decoration: none;
   }
   table.tbl th a:hover {
-    color: rgb(var(--c-tx));
+    color: var(--e-ink);
   }
   table.tbl th.sorted {
-    color: rgb(var(--c-tx));
+    color: var(--e-ink);
   }
   table.tbl th.sorted::after {
     content: " \25BE";
-    color: rgb(var(--c-acc));
+    color: var(--e-accent);
   }
   table.tbl th.sorted[aria-sort="descending"]::after {
     content: " \25B4";
@@ -130,13 +132,13 @@
   .fchev {
     display: inline-block;
     width: 14px;
-    color: rgb(var(--c-dim));
+    color: var(--e-faint);
     font-size: 11px;
     text-decoration: none;
     transition: transform .6s cubic-bezier(.4, 0, .2, 1);
   }
   .fchev:hover {
-    color: rgb(var(--c-tx));
+    color: var(--e-ink);
   }
   table.tbl tr.open .fchev {
     transform: rotate(90deg);
@@ -146,19 +148,19 @@
   }
   table.tbl tr.foldrow td {
     padding: 0 14px 0 36px;
-    border-bottom: 1px dashed rgb(var(--c-fog));
+    border-bottom: 1px dashed var(--e-muted);
     @supports (color: color-mix(in lab, red, red)) {
-      border-bottom: 1px dashed color-mix(in srgb, rgb(var(--c-fog)) 18%, transparent);
+      border-bottom: 1px dashed color-mix(in srgb, var(--e-muted) 18%, transparent);
     }
-    background: rgb(var(--c-fog));
+    background: var(--e-muted);
     @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, rgb(var(--c-fog)) 4%, transparent);
+      background: color-mix(in srgb, var(--e-muted) 4%, transparent);
     }
   }
   table.tbl tr.foldrow:hover td {
-    background: rgb(var(--c-fog));
+    background: var(--e-muted);
     @supports (color: color-mix(in lab, red, red)) {
-      background: color-mix(in srgb, rgb(var(--c-fog)) 4%, transparent);
+      background: color-mix(in srgb, var(--e-muted) 4%, transparent);
     }
   }
   table.tbl tr.foldrow .foldbox {
@@ -178,7 +180,7 @@
   }
   table.tbl .num {
     text-align: right;
-    font-family: var(--font-mono);
+    font-family: var(--e-font-mono);
   }
   table.tbl td.num {
     font-size: 12px;
