@@ -9,7 +9,7 @@
          failOnWarning="true">
     <php>
         <ini name="memory_limit" value="-1"/>
-        <env name="KERNEL_CLASS" value="Uhifadhi\Element\Tests\Integration\TestKernel"/>
+        <env name="KERNEL_CLASS" value="UtafitiLabs\ElementBundle\Tests\Integration\TestKernel"/>
         <!--
             NO DATABASE. This bundle owns no entity and remembers nothing: it is
             a component library, and every one of its assertions is about markup

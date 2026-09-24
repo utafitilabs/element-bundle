@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Tests\Build;
+namespace UtafitiLabs\ElementBundle\Tests\Build;
 
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Symfonycasts\TailwindBundle\SymfonycastsTailwindBundle;
-use Uhifadhi\Element\UhifadhiElementBundle;
+use UtafitiLabs\ElementBundle\UtafitiLabsElementBundle;
 
 /**
  * THE KERNEL THAT BUILDS THE STYLESHEET, and does nothing else.
@@ -47,7 +47,7 @@ final class BuildKernel extends Kernel
         yield new TwigBundle();
         yield new TwigComponentBundle();
         yield new SymfonycastsTailwindBundle();
-        yield new UhifadhiElementBundle();
+        yield new UtafitiLabsElementBundle();
     }
 
     public function getProjectDir(): string

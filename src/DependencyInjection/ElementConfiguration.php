@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\DependencyInjection;
+namespace UtafitiLabs\ElementBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;

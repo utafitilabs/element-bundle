@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,21 +11,21 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Tests\Unit\Model;
+namespace UtafitiLabs\ElementBundle\Tests\Unit\Model;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Uhifadhi\Element\Model\TableColumn;
+use UtafitiLabs\ElementBundle\Model\TableColumn;
 
 #[CoversClass(TableColumn::class)]
 final class TableColumnTest extends TestCase
 {
     public function testAKeyAndALabelAreEnough(): void
     {
-        $column = new TableColumn('seats', 'Seats');
+        $column = new TableColumn('depth', 'Depth');
 
-        self::assertSame('seats', $column->key);
-        self::assertSame('Seats', $column->label);
+        self::assertSame('depth', $column->key);
+        self::assertSame('Depth', $column->label);
         self::assertNull($column->sortUrl);
         self::assertFalse($column->numeric);
     }
@@ -33,13 +33,13 @@ final class TableColumnTest extends TestCase
     public function testAColumnIsBuiltFromTheArrayATemplateCanWrite(): void
     {
         $column = TableColumn::fromArray([
-            'key' => 'seats',
-            'label' => 'Seats',
-            'sortUrl' => '/team/positions?sort=seats',
+            'key' => 'depth',
+            'label' => 'Depth',
+            'sortUrl' => '/team/berths?sort=seats',
             'numeric' => true,
         ]);
 
-        self::assertSame('/team/positions?sort=seats', $column->sortUrl);
+        self::assertSame('/team/berths?sort=seats', $column->sortUrl);
         self::assertTrue($column->numeric);
     }
 
@@ -48,17 +48,17 @@ final class TableColumnTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('key');
 
-        TableColumn::fromArray(['label' => 'Seats']);
+        TableColumn::fromArray(['label' => 'Depth']);
     }
 
     /**
-     * A NUMERIC COLUMN IS RIGHT-ALIGNED AND MONO — the house's `.num`, so a
+     * A NUMERIC COLUMN IS RIGHT-ALIGNED AND MONO — the library's `.num`, so a
      * column of figures can be compared down the page. The class is the
      * component's to emit; a consumer names the FACT, not the class.
      */
-    public function testANumericColumnCarriesTheHouseNumberClass(): void
+    public function testANumericColumnCarriesTheNumberClass(): void
     {
-        self::assertSame('num', new TableColumn('seats', 'Seats', numeric: true)->cellClass());
+        self::assertSame('num', new TableColumn('depth', 'Depth', numeric: true)->cellClass());
         self::assertSame('', new TableColumn('name', 'Name')->cellClass());
     }
 }

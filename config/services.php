@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Uhifadhi\Element\Twig\Components\Table;
+use UtafitiLabs\ElementBundle\Twig\Components\Table;
 
 /*
  * EXPLICIT DI, AS A REUSABLE BUNDLE MUST.
@@ -42,13 +42,13 @@ use Uhifadhi\Element\Twig\Components\Table;
 return static function (ContainerConfigurator $container): void {
     $container->services()
 
-        // The house register. TwigComponentPass marks every tagged component
+        // The register. TwigComponentPass marks every tagged component
         // not-shared, so one page may draw as many tables as it likes.
         ->set('element.twig.component.table', Table::class)
             ->args([param('element.table.empty_text')])
             ->tag('twig.component', [
                 'key' => 'Element:Table',
-                'template' => '@UhifadhiElement/components/Table.html.twig',
+                'template' => '@UtafitiLabsElement/components/Table.html.twig',
                 // NOT a detail: ComponentMetadata::expose_public_props() defaults
                 // to FALSE when the key is absent, and the autoconfiguration
                 // callback array_filter()s the attribute's config — so the

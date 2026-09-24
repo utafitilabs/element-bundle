@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Tests\Unit\Asset;
+namespace UtafitiLabs\ElementBundle\Tests\Unit\Asset;
 
 use PHPUnit\Framework\TestCase;
-use Uhifadhi\Element\UhifadhiElementBundle;
+use UtafitiLabs\ElementBundle\UtafitiLabsElementBundle;
 
 /**
  * THE SEAM BETWEEN THE TEMPLATE AND THE SHIPPED SCRIPT.
@@ -35,7 +35,7 @@ final class FoldControllerSeamTest extends TestCase
         /** @var array{name?: string, symfony?: array{controllers?: array<string, array{main?: string, enabled?: bool}>}} $manifest */
         $manifest = json_decode(self::read('/assets/package.json'), true, flags: \JSON_THROW_ON_ERROR);
 
-        self::assertSame(UhifadhiElementBundle::ASSET_NAMESPACE, $manifest['name'] ?? null, 'StimulusBundle resolves a controller by "@".<package name>; the manifest name IS the asset namespace.');
+        self::assertSame(UtafitiLabsElementBundle::ASSET_NAMESPACE, $manifest['name'] ?? null, 'StimulusBundle resolves a controller by "@".<package name>; the manifest name IS the asset namespace.');
 
         $controllers = $manifest['symfony']['controllers'] ?? [];
         self::assertArrayHasKey('register-fold', $controllers, 'The controller is published under the name the identifier is built from.');
@@ -50,12 +50,12 @@ final class FoldControllerSeamTest extends TestCase
     public function testThePublishedIdentifierIsTheNamespaceNormalised(): void
     {
         self::assertSame(
-            'uhifadhi--element-module--register-fold',
-            UhifadhiElementBundle::FOLD_CONTROLLER,
+            'utafitilabs--element-bundle--register-fold',
+            UtafitiLabsElementBundle::FOLD_CONTROLLER,
         );
         self::assertSame(
-            str_replace(['@', '_', '/'], ['', '-', '--'], UhifadhiElementBundle::ASSET_NAMESPACE).'--register-fold',
-            UhifadhiElementBundle::FOLD_CONTROLLER,
+            str_replace(['@', '_', '/'], ['', '-', '--'], UtafitiLabsElementBundle::ASSET_NAMESPACE).'--register-fold',
+            UtafitiLabsElementBundle::FOLD_CONTROLLER,
         );
     }
 

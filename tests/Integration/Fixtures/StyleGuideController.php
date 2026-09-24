@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Tests\Integration\Fixtures;
+namespace UtafitiLabs\ElementBundle\Tests\Integration\Fixtures;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,8 +27,8 @@ use Twig\Environment;
  * maintainer opens in a browser (`php -S` over the test kernel), which is the
  * point — a guide nobody renders is a document, not a guide.
  *
- * The sample data is synthetic and names nobody: positions in an invented
- * conservation authority, with seat counts and no people in them.
+ * The sample data is synthetic and names nobody: berths on an invented
+ * harbour's quays, with their depths and what is moored at them.
  *
  * Patterned on FrameworkBundle's own TemplateController: a controller extends
  * nothing and takes what it needs in its constructor.
@@ -47,25 +47,25 @@ final class StyleGuideController
 
         return new Response($this->twig->render('@Fixtures/style-guide.html.twig', [
             'open' => \is_string($open) ? $open : '',
-            'sort' => 'seats',
+            'sort' => 'depth',
             'columns' => [
-                ['key' => 'position', 'label' => 'Position', 'sortUrl' => '?sort=position'],
-                ['key' => 'placement', 'label' => 'Placement'],
-                ['key' => 'seats', 'label' => 'Seats', 'sortUrl' => '?sort=seats', 'numeric' => true],
-                ['key' => 'grants', 'label' => 'Grants'],
+                ['key' => 'berth', 'label' => 'Berth', 'sortUrl' => '?sort=berth'],
+                ['key' => 'quay', 'label' => 'Quay'],
+                ['key' => 'depth', 'label' => 'Depth', 'sortUrl' => '?sort=depth', 'numeric' => true],
+                ['key' => 'moored', 'label' => 'Moored'],
             ],
             'rows' => [
                 [
-                    'id' => 'warden', 'name' => 'Warden', 'foldable' => true,
-                    'cells' => ['position' => 'Warden', 'placement' => 'Organization', 'seats' => '3', 'grants' => 'Areas, Team'],
+                    'id' => 'north-12', 'name' => 'North 12', 'foldable' => true,
+                    'cells' => ['berth' => 'North 12', 'quay' => 'North quay', 'depth' => '7', 'moored' => 'Kestrel'],
                 ],
                 [
-                    'id' => 'ranger', 'name' => 'Ranger', 'foldable' => true,
-                    'cells' => ['position' => 'Ranger', 'placement' => 'Area', 'seats' => '24', 'grants' => 'Patrols'],
+                    'id' => 'east-7', 'name' => 'East 7', 'foldable' => true,
+                    'cells' => ['berth' => 'East 7', 'quay' => 'Fish dock', 'depth' => '4', 'moored' => 'Petrel'],
                 ],
                 [
-                    'id' => 'ecologist', 'name' => 'Ecologist', 'foldable' => true,
-                    'cells' => ['position' => 'Ecologist', 'placement' => 'Department', 'seats' => '4', 'grants' => 'Grants nothing'],
+                    'id' => 'dry-dock', 'name' => 'Dry dock', 'foldable' => true,
+                    'cells' => ['berth' => 'Dry dock', 'quay' => 'Inner basin', 'depth' => '11', 'moored' => 'Nothing'],
                 ],
             ],
         ]));

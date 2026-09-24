@@ -3,8 +3,9 @@
     maintainer opens and the page the functional suite reads.
 
     It links BOTH stylesheets, in the order a page with no other source of the
-    house channels must: the tokens first, the components after. A page drawn
-    inside a host that already publishes the channels links the second alone.
+    theme channels must: the tokens first, the components after. A page drawn
+    inside an application that already publishes the channels links the second
+    alone.
 #}
 <!DOCTYPE html>
 <html lang="en">
@@ -12,8 +13,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Element — style guide</title>
-    <link rel="stylesheet" href="{{ asset(constant('Uhifadhi\\Element\\UhifadhiElementBundle::TOKENS_STYLESHEET')) }}">
-    <link rel="stylesheet" href="{{ asset(constant('Uhifadhi\\Element\\UhifadhiElementBundle::STYLESHEET')) }}">
+    <link rel="stylesheet" href="{{ asset(constant('UtafitiLabs\\ElementBundle\\UtafitiLabsElementBundle::TOKENS_STYLESHEET')) }}">
+    <link rel="stylesheet" href="{{ asset(constant('UtafitiLabs\\ElementBundle\\UtafitiLabsElementBundle::STYLESHEET')) }}">
     <style>
         body { background: rgb(var(--c-cv)); color: rgb(var(--c-tx)); font-family: var(--font-body); margin: 0; padding: 40px 16px; }
         main { max-width: 980px; margin: 0 auto; display: grid; gap: 40px; }
@@ -25,32 +26,32 @@
 <main>
     <header>
         <h1>Element</h1>
-        <p class="lede">The house component library. Every component below is what a module renders, unchanged.</p>
+        <p class="lede">The component library. Every component below is what a consuming application renders, unchanged.</p>
     </header>
 
     {# THE REGISTER, FOLDING. Rows fold onto a panel; the address says which. #}
     <twig:Element:Table
-        title="Positions"
-        note="what each grants, and who holds it"
+        title="Berths"
+        note="how deep it is, and what is moored there"
         :columns="columns"
         :rows="rows"
         :sort="sort"
         :open="open"
     >
         <twig:block name="fold">
-            <p>{{ row.name }} — {{ row.cell('seats') }} seats, {{ row.cell('placement')|lower }}.</p>
+            <p>{{ row.name }} — {{ row.cell('depth') }} m at {{ row.cell('quay')|lower }}.</p>
         </twig:block>
     </twig:Element:Table>
 
     {# THE SAME REGISTER, FLAT. No row folds, so no chevron column is drawn. #}
-    <twig:Element:Table title="Placements" :count="false" :columns="[{ key: 'placement', label: 'Placement' }]" :rows="[
-        { cells: { placement: 'Organization' } },
-        { cells: { placement: 'Area' } },
-        { cells: { placement: 'Department' } }
+    <twig:Element:Table title="Quays" :count="false" :columns="[{ key: 'quay', label: 'Quay' }]" :rows="[
+        { cells: { quay: 'North quay' } },
+        { cells: { quay: 'Fish dock' } },
+        { cells: { quay: 'Inner basin' } }
     ]" />
 
     {# AND WITH NOTHING IN IT. An empty register states the fact. #}
-    <twig:Element:Table title="Vacancies" :columns="[{ key: 'position', label: 'Position' }]" :rows="[]" />
+    <twig:Element:Table title="Vacancies" :columns="[{ key: 'berth', label: 'Berth' }]" :rows="[]" />
 </main>
 </body>
 </html>

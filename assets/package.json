@@ -1,7 +1,7 @@
 {
-    "name": "@uhifadhi/element-module",
+    "name": "@utafitilabs/element-bundle",
     "description": "Front-end assets of the Element component library — mapped into an installation via AssetMapper.",
-    "license": "AGPL-3.0-or-later",
+    "license": "MIT",
     "symfony": {
         "controllers": {
             "register-fold": {

@@ -11,7 +11,7 @@
    https://tailwindcss.com/docs/preflight#disabling-preflight
 
    THE PALETTE IS SPENT HERE AND DEFINED NEXT DOOR. Every colour below is
-   `rgb(var(--c-*))` — the house channels — and this file defines not one of
+   `rgb(var(--c-*))` — the theme channels — and this file defines not one of
    them. A page that already has them links this file alone; a page standing on
    its own links element-tokens.css first. Two definitions of one colour is a
    rendering decided by load order, which is the bug this rule exists to
@@ -37,7 +37,7 @@
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
 
 /* ==================== THE THEME ====================
-   The house channels, handed to Tailwind as theme colours so a consumer can
+   The theme channels, handed to Tailwind as theme colours so a consumer can
    write `text-fog` or `border-line` and get the SAME colour the components use.
    The values are `rgb(var(--c-*))`, resolved by the browser at paint time, so a
    utility follows light and dark with no second definition and no rebuild. */
@@ -68,9 +68,9 @@
 
 @layer components {
     /* ==================== THE PLATE ====================
-       The card every surface in the platform is built from, and the tab that
-       names it. The tab straddles the border, which is what makes a screen of
-       cards scannable; the trailing `.src` is the qualifier — "Positions · 7 ·
+       The card every surface in a consuming application is built from, and the
+       tab that names it. The tab straddles the border, which is what makes a screen of
+       cards scannable; the trailing `.src` is the qualifier — "Berths · 7 ·
        what each grants" — in sentence case, so the two halves read as label and
        note rather than as one shout. */
     .c {
@@ -155,7 +155,7 @@
     /* ---- A REGISTER ROW THAT FOLDS OPEN (ruled 2026-09-22, the fold contract)
        Markup: the folding row carries `data-fold-id` and a chevron cell; ONE
        `tr.foldrow` follows it holding `.foldbox > .fold-in > content`. The
-       header row draws NO rule; the fold row carries the house dashed rule in
+       header row draws NO rule; the fold row carries the dashed rule in
        BOTH states (1px tall while shut), so opening only grows the panel above
        a rule that never moves. The panel's spacing is the content's MARGIN
        inside the clipped track — never padding on the track, which would zero

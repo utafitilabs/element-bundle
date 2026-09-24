@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Tests\Integration;
+namespace UtafitiLabs\ElementBundle\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -22,8 +22,8 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
-use Uhifadhi\Element\Tests\Integration\Fixtures\StyleGuideController;
-use Uhifadhi\Element\UhifadhiElementBundle;
+use UtafitiLabs\ElementBundle\Tests\Integration\Fixtures\StyleGuideController;
+use UtafitiLabs\ElementBundle\UtafitiLabsElementBundle;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
@@ -32,11 +32,11 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
  * real: framework + twig + the published TwigComponentBundle and StimulusBundle
  * this bundle's components are made of.
  *
- * NO DATABASE, because there is nothing to remember, and NO PLATFORM BUNDLE,
- * because there is nothing to borrow: a component library the platform is built
- * out of cannot be built out of the platform, and a kernel that quietly
- * installed the shell would hide the day this library stopped standing on its
- * own.
+ * NO DATABASE, because there is nothing to remember, and NO APPLICATION
+ * BUNDLE, because there is nothing to borrow: a component library an
+ * application is built out of cannot be built out of the application, and a
+ * kernel that quietly installed one would hide the day this library stopped
+ * standing on its own.
  *
  * It also mounts the STYLE GUIDE — the one page that renders every component
  * with sample rows, which is both what the functional suite reads and what a
@@ -55,17 +55,17 @@ final class TestKernel extends Kernel
         // host would compute.
         yield new StimulusBundle();
         yield new TwigComponentBundle();
-        yield new UhifadhiElementBundle();
+        yield new UtafitiLabsElementBundle();
     }
 
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir().'/element-module-tests/cache/'.$this->environment;
+        return sys_get_temp_dir().'/element-bundle-tests/cache/'.$this->environment;
     }
 
     public function getLogDir(): string
     {
-        return sys_get_temp_dir().'/element-module-tests/log';
+        return sys_get_temp_dir().'/element-bundle-tests/log';
     }
 
     protected function configureContainer(ContainerConfigurator $container): void

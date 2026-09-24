@@ -10,7 +10,7 @@ one.
 - [The fold contract](#the-fold-contract)
 - [Tailwind, built here and committed](#tailwind-built-here-and-committed)
 - [The palette lives in two files](#the-palette-lives-in-two-files)
-- [No dependency on the platform](#no-dependency-on-the-platform)
+- [No dependency on an application](#no-dependency-on-the-platform)
 - [Explicit DI, and no AsTwigComponent attribute](#explicit-di-and-no-astwigcomponent-attribute)
 - [The component prepares the view](#the-component-prepares-the-view)
 - [Rows and columns are value objects, built from arrays](#rows-and-columns-are-value-objects-built-from-arrays)
@@ -18,14 +18,13 @@ one.
 
 ## Open — for the kick-off
 
-**NEEDS A VERDICT: design-workspace parity — who owns the house vocabulary once
+**NEEDS A VERDICT: design-workspace parity — who owns the register vocabulary once
 components live here?**
 
 This library now ships `.c`, `.tab`, `.src`, `table.tbl`, the sortable-header
 rules and the whole fold contract. `shell-module/public/shell.css` ships the same
 rules today, and the design workspace
-(`DesignsProjects/uhifadhi-web`, `DesignsProjects/team-module`) is the drawing
-both were ported from. Three copies of one vocabulary is two too many, and two of
+a consuming product keeps is the drawing both were ported from. Three copies of one vocabulary is two too many, and two of
 them being loaded on the same page is a rendering decided by load order.
 
 What the owner has to decide, before the shell consumes `<twig:Element:Table>`:
@@ -50,7 +49,7 @@ What the owner has to decide, before the shell consumes `<twig:Element:Table>`:
    register pages retire. Today the workspace is canonical and this library was
    ported from it.
 
-Until that verdict, nothing in the platform consumes this bundle — which is
+Until that verdict, nothing in an application consumes this bundle — which is
 deliberate, and why this first version ships with no integration.
 
 ## The fold contract
@@ -84,7 +83,7 @@ library loads inside somebody else's page. Source scanning is off
 Tailwind build over its own templates and imports this theme, which is why the
 theme is emitted whole (`@theme static`).
 
-*Reopens when:* the platform gains a shared asset build that bundles can hook
+*Reopens when:* an application gains a shared asset build that bundles can hook
 into, or when a consumer needs utilities this library cannot know about.
 
 ## The palette lives in two files
@@ -98,11 +97,11 @@ spends.
 
 *Reopens when:* the ownership question above is ruled.
 
-## No dependency on the platform
+## No dependency on an application
 
-`composer.json` requires no `uhifadhi/*` package, and `tests/Integration/TestKernel.php`
-installs no platform bundle. A component library the platform is built out of
-cannot be built out of the platform, and a test kernel that quietly installed the
+`composer.json` requires no application package, and `tests/Integration/TestKernel.php`
+installs no platform bundle. A component library an application is built out of
+cannot be built out of an application, and a test kernel that quietly installed the
 shell would hide the day this stopped being true.
 
 *Reopens when:* a component genuinely needs a platform contract — in which case
@@ -133,7 +132,7 @@ view.
 A caller holding value objects passes them through; a caller writing a Twig
 literal writes `{ key: …, label: … }`. `#[PreMount]` turns the second into the
 first, so exactly one shape reaches the template. A column names the **fact**
-(`numeric: true`), never the class — so a seat count is right-aligned and mono in
+(`numeric: true`), never the class — so a depth is right-aligned and mono in
 every register in the product without anyone remembering `.num`.
 
 A **foldable row without an `id` is refused**, because the open set rides in the
@@ -141,7 +140,7 @@ address and such a row would shut on every reload with nobody told why.
 
 ## The chevron is an anchor
 
-The house rule is that interactive chrome is a real `<button>`, because Stimulus
+The rule is that interactive chrome is a real `<button>`, because Stimulus
 binds no default event to `<b>` or `<span>`. The ruled design and the shipped
 shell controller both use `<a class="fchev" href="#">`, which is a real
 interactive element with keyboard behaviour, so the port keeps it rather than

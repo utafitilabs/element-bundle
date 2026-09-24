@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,10 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Tests\Unit\Stylesheet;
+namespace UtafitiLabs\ElementBundle\Tests\Unit\Stylesheet;
 
 use PHPUnit\Framework\TestCase;
-use Uhifadhi\Element\UhifadhiElementBundle;
+use UtafitiLabs\ElementBundle\UtafitiLabsElementBundle;
 
 /**
  * EVERY CLASS A COMPONENT EMITS IS A CLASS THIS BUNDLE SHIPS.
@@ -55,7 +55,7 @@ final class StylesheetVocabularyTest extends TestCase
         }
     }
 
-    public function testTheVocabularyIsTheHouseRegisterVocabulary(): void
+    public function testTheVocabularyIsTheRegisterVocabulary(): void
     {
         $classes = array_keys(self::classesEmitted());
 
@@ -123,7 +123,7 @@ final class StylesheetVocabularyTest extends TestCase
 
     private static function built(): string
     {
-        $css = file_get_contents(self::root().'/public/'.basename(UhifadhiElementBundle::STYLESHEET));
+        $css = file_get_contents(self::root().'/public/'.basename(UtafitiLabsElementBundle::STYLESHEET));
         self::assertIsString($css, 'The built stylesheet is committed: run "composer css:build".');
 
         return $css;

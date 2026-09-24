@@ -12,10 +12,10 @@ import { Controller } from '@hotwired/stimulus';
  * none is kept in the browser: the address is the whole of the memory, which is
  * why a reload reopens exactly what was open and a shared link does too.
  *
- * Identifier in a host: `uhifadhi--element-module--register-fold` — StimulusBundle's
+ * Identifier in a host: `utafitilabs--element-bundle--register-fold` — StimulusBundle's
  * own normalisation of this package's asset namespace plus the name
  * assets/package.json publishes the controller under. The component template
- * writes it from Uhifadhi\Element\UhifadhiElementBundle::FOLD_CONTROLLER, and
+ * writes it from UtafitiLabs\ElementBundle\UtafitiLabsElementBundle::FOLD_CONTROLLER, and
  * tests/Unit/Asset/FoldControllerSeamTest.php holds the three spellings
  * together.
  *

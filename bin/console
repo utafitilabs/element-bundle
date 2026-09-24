@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -18,7 +18,7 @@ declare(strict_types=1);
 // composer.json's "css:build" script, which is how it is meant to be run.
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Uhifadhi\Element\Tests\Build\BuildKernel;
+use UtafitiLabs\ElementBundle\Tests\Build\BuildKernel;
 
 require __DIR__.'/../vendor/autoload.php';
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,11 +11,11 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Tests\Unit\Stylesheet;
+namespace UtafitiLabs\ElementBundle\Tests\Unit\Stylesheet;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Uhifadhi\Element\UhifadhiElementBundle;
+use UtafitiLabs\ElementBundle\UtafitiLabsElementBundle;
 
 /**
  * THE FOLD CONTRACT, AS SHIPPED (ruled 2026-09-22).
@@ -65,7 +65,7 @@ final class FoldContractTest extends TestCase
         yield 'the fold row is inset under the chevron' => [
             'table.tbl tr.foldrow td { padding: 0 14px 0 36px;',
         ];
-        yield 'and carries the house dashed rule in both states' => [
+        yield 'and carries the dashed rule in both states' => [
             'border-bottom: 1px dashed color-mix(in srgb, rgb(var(--c-fog)) 18%, transparent);',
         ];
         yield 'on its own quiet ground' => [
@@ -118,13 +118,13 @@ final class FoldContractTest extends TestCase
     {
         $css = self::builtStylesheet();
 
-        self::assertStringContainsString('var(--c-acc)', $css, 'The components are painted from the house channels.');
+        self::assertStringContainsString('var(--c-acc)', $css, 'The components are painted from the theme channels.');
         self::assertDoesNotMatchRegularExpression('/--c-[a-zA-Z0-9]+\s*:/', $css, 'Only the token sheet defines a --c-* channel.');
     }
 
     public function testTheTokenSheetDefinesEveryChannelTheComponentSheetSpends(): void
     {
-        $tokens = file_get_contents(\dirname(__DIR__, 3).'/public/'.basename(UhifadhiElementBundle::TOKENS_STYLESHEET));
+        $tokens = file_get_contents(\dirname(__DIR__, 3).'/public/'.basename(UtafitiLabsElementBundle::TOKENS_STYLESHEET));
         self::assertIsString($tokens);
 
         preg_match_all('/var\((--c-[a-zA-Z0-9]+)/', self::builtStylesheet(), $matches);
@@ -137,7 +137,7 @@ final class FoldContractTest extends TestCase
 
     private static function builtStylesheet(): string
     {
-        $path = \dirname(__DIR__, 3).'/public/'.basename(UhifadhiElementBundle::STYLESHEET);
+        $path = \dirname(__DIR__, 3).'/public/'.basename(UtafitiLabsElementBundle::STYLESHEET);
         self::assertFileExists($path, 'The built stylesheet is committed: run "composer css:build".');
 
         $css = file_get_contents($path);

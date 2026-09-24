@@ -1,6 +1,6 @@
 # Element — documentation
 
-The house component library: Twig components, styled with Tailwind, that the
+The component library: Twig components, styled with Tailwind, that the
 shell and every module render their vocabulary with.
 
 ## Contents

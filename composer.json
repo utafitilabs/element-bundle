@@ -1,6 +1,6 @@
 {
-    "name": "uhifadhi/element-module",
-    "description": "Element: the house component library — Twig components, styled with Tailwind, that the shell and every module render their vocabulary with.",
+    "name": "utafitilabs/element-bundle",
+    "description": "Element: a Twig component library for Symfony — register tables with folding rows, styled with Tailwind and themed entirely from configuration.",
     "type": "symfony-bundle",
     "keywords": [
         "symfony-ux",
@@ -9,9 +9,9 @@
         "design-system",
         "components",
         "symfony",
-        "uhifadhi"
+        "ui"
     ],
-    "license": "AGPL-3.0-or-later",
+    "license": "MIT",
     "authors": [
         {
             "name": "Ezekiel Mjema",
@@ -44,12 +44,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Uhifadhi\\Element\\": "src/"
+            "UtafitiLabs\\ElementBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Uhifadhi\\Element\\Tests\\": "tests/"
+            "UtafitiLabs\\ElementBundle\\Tests\\": "tests/"
         }
     },
     "scripts": {

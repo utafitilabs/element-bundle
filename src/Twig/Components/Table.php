@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,19 +11,19 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Twig\Components;
+namespace UtafitiLabs\ElementBundle\Twig\Components;
 
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
-use Uhifadhi\Element\DependencyInjection\ElementConfiguration;
-use Uhifadhi\Element\Model\TableColumn;
-use Uhifadhi\Element\Model\TableRow;
-use Uhifadhi\Element\UhifadhiElementBundle;
+use UtafitiLabs\ElementBundle\DependencyInjection\ElementConfiguration;
+use UtafitiLabs\ElementBundle\Model\TableColumn;
+use UtafitiLabs\ElementBundle\Model\TableRow;
+use UtafitiLabs\ElementBundle\UtafitiLabsElementBundle;
 
 /**
- * `<twig:Element:Table>` — THE HOUSE REGISTER.
+ * `<twig:Element:Table>` — THE REGISTER.
  *
- * One table in a house card, its tab naming and counting it, its headers
+ * One table in the library's card, its tab naming and counting it, its headers
  * sortable, and its rows able to fold open onto a panel. The fold is the ruled
  * contract of 2026-09-22 and is ported verbatim: a folding row carries a
  * chevron cell and its identity, ONE `tr.foldrow` follows it holding
@@ -36,14 +36,14 @@ use Uhifadhi\Element\UhifadhiElementBundle;
  * attribute would have carried.
  *
  * @see https://symfony.com/bundles/ux-twig-component/current/index.html
- * @see UhifadhiElementBundle::FOLD_CONTROLLER for the JS half of the fold
+ * @see UtafitiLabsElementBundle::FOLD_CONTROLLER for the JS half of the fold
  */
 final class Table
 {
     /** The card tab's name — what this register is, in one or two words. */
     public string $title = '';
 
-    /** The tab's qualifier, sentence case: "what each grants, and who holds it". */
+    /** The tab's qualifier, sentence case: "how deep it is, and what is moored there". */
     public ?string $note = null;
 
     /**
@@ -79,7 +79,7 @@ final class Table
     public string $foldParam = 'open';
 
     /** The Stimulus identifier that owns the chevron's click. */
-    public string $controller = UhifadhiElementBundle::FOLD_CONTROLLER;
+    public string $controller = UtafitiLabsElementBundle::FOLD_CONTROLLER;
 
     /** What an empty register says. */
     public string $emptyText;
@@ -179,7 +179,7 @@ final class Table
     }
 
     /**
-     * The tab's qualifier — the count and the note, in the house's own
+     * The tab's qualifier — the count and the note, in the library's own
      * punctuation, or nothing at all.
      */
     public function src(): string

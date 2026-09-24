@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,20 +11,20 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Tests\Unit\Model;
+namespace UtafitiLabs\ElementBundle\Tests\Unit\Model;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Uhifadhi\Element\Model\TableRow;
+use UtafitiLabs\ElementBundle\Model\TableRow;
 
 #[CoversClass(TableRow::class)]
 final class TableRowTest extends TestCase
 {
     public function testARowIsItsCells(): void
     {
-        $row = new TableRow(['name' => 'Warden', 'seats' => '4']);
+        $row = new TableRow(['name' => 'North 12', 'depth' => '4']);
 
-        self::assertSame('Warden', $row->cell('name'));
+        self::assertSame('North 12', $row->cell('name'));
         self::assertSame('', $row->cell('holders'), 'A column with no cell renders empty, never an error.');
         self::assertNull($row->id);
         self::assertFalse($row->foldable, 'A row folds only when it is told to.');
@@ -32,25 +32,25 @@ final class TableRowTest extends TestCase
 
     public function testARowThatFoldsCarriesTheIdentityTheAddressWillName(): void
     {
-        $row = new TableRow(['name' => 'Warden'], id: 'warden', name: 'Warden', foldable: true);
+        $row = new TableRow(['name' => 'North 12'], id: 'north-12', name: 'North 12', foldable: true);
 
         self::assertTrue($row->foldable);
-        self::assertSame('warden', $row->id);
-        self::assertSame('Warden', $row->name);
+        self::assertSame('north-12', $row->id);
+        self::assertSame('North 12', $row->name);
     }
 
     public function testARowIsBuiltFromTheArrayATemplateCanWrite(): void
     {
         $row = TableRow::fromArray([
-            'id' => 'warden',
-            'name' => 'Warden',
+            'id' => 'north-12',
+            'name' => 'North 12',
             'foldable' => true,
-            'cells' => ['name' => 'Warden'],
+            'cells' => ['name' => 'North 12'],
         ]);
 
-        self::assertSame('warden', $row->id);
+        self::assertSame('north-12', $row->id);
         self::assertTrue($row->foldable);
-        self::assertSame('Warden', $row->cell('name'));
+        self::assertSame('North 12', $row->cell('name'));
     }
 
     /**
@@ -63,6 +63,6 @@ final class TableRowTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('id');
 
-        new TableRow(['name' => 'Warden'], foldable: true);
+        new TableRow(['name' => 'North 12'], foldable: true);
     }
 }

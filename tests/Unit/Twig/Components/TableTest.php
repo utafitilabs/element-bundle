@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,13 +11,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Tests\Unit\Twig\Components;
+namespace UtafitiLabs\ElementBundle\Tests\Unit\Twig\Components;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Uhifadhi\Element\Model\TableColumn;
-use Uhifadhi\Element\Model\TableRow;
-use Uhifadhi\Element\Twig\Components\Table;
+use UtafitiLabs\ElementBundle\Model\TableColumn;
+use UtafitiLabs\ElementBundle\Model\TableRow;
+use UtafitiLabs\ElementBundle\Twig\Components\Table;
 
 #[CoversClass(Table::class)]
 final class TableTest extends TestCase
@@ -25,37 +25,37 @@ final class TableTest extends TestCase
     public function testColumnsAndRowsArriveAsTheArraysATemplateCanWrite(): void
     {
         $table = $this->mounted([
-            'title' => 'Positions',
-            'columns' => [['key' => 'name', 'label' => 'Position'], ['key' => 'seats', 'label' => 'Seats', 'numeric' => true]],
-            'rows' => [['cells' => ['name' => 'Warden', 'seats' => '4']]],
+            'title' => 'Berths',
+            'columns' => [['key' => 'name', 'label' => 'Berth'], ['key' => 'depth', 'label' => 'Depth', 'numeric' => true]],
+            'rows' => [['cells' => ['name' => 'North 12', 'depth' => '4']]],
         ]);
 
         self::assertInstanceOf(TableColumn::class, $table->columns[0]);
         self::assertInstanceOf(TableRow::class, $table->rows[0]);
-        self::assertSame('Warden', $table->rows[0]->cell('name'));
+        self::assertSame('North 12', $table->rows[0]->cell('name'));
     }
 
     public function testValueObjectsPassStraightThrough(): void
     {
         $table = $this->mounted([
-            'title' => 'Positions',
-            'columns' => [new TableColumn('name', 'Position')],
-            'rows' => [new TableRow(['name' => 'Warden'])],
+            'title' => 'Berths',
+            'columns' => [new TableColumn('name', 'Berth')],
+            'rows' => [new TableRow(['name' => 'North 12'])],
         ]);
 
-        self::assertSame('Position', $table->columns[0]->label);
-        self::assertSame('Warden', $table->rows[0]->cell('name'));
+        self::assertSame('Berth', $table->columns[0]->label);
+        self::assertSame('North 12', $table->rows[0]->cell('name'));
     }
 
     /**
-     * THE TAB NAMES THE TABLE AND COUNTS IT — "Positions · 7". The count is not
+     * THE TAB NAMES THE TABLE AND COUNTS IT — "Berths · 7". The count is not
      * a caption a caller retypes: left unsaid it is how many rows there are.
      */
     public function testTheTabCountsTheRowsUnlessTheCallerKnowsBetter(): void
     {
         $table = $this->mounted([
-            'title' => 'Positions',
-            'columns' => [['key' => 'name', 'label' => 'Position']],
+            'title' => 'Berths',
+            'columns' => [['key' => 'name', 'label' => 'Berth']],
             'rows' => [['cells' => ['name' => 'A']], ['cells' => ['name' => 'B']]],
         ]);
 
@@ -63,22 +63,22 @@ final class TableTest extends TestCase
         self::assertSame('· 2', $table->src());
 
         $paged = $this->mounted([
-            'title' => 'Positions',
+            'title' => 'Berths',
             'count' => 41,
-            'note' => 'what each grants, and who holds it',
-            'columns' => [['key' => 'name', 'label' => 'Position']],
+            'note' => 'how deep it is, and what is moored there',
+            'columns' => [['key' => 'name', 'label' => 'Berth']],
             'rows' => [['cells' => ['name' => 'A']]],
         ]);
 
-        self::assertSame('· 41 · what each grants, and who holds it', $paged->src());
+        self::assertSame('· 41 · how deep it is, and what is moored there', $paged->src());
     }
 
     public function testACountThatIsDeliberatelyAbsentLeavesTheTabAName(): void
     {
         $table = $this->mounted([
-            'title' => 'Positions',
+            'title' => 'Berths',
             'count' => false,
-            'columns' => [['key' => 'name', 'label' => 'Position']],
+            'columns' => [['key' => 'name', 'label' => 'Berth']],
             'rows' => [['cells' => ['name' => 'A']]],
         ]);
 
@@ -89,14 +89,14 @@ final class TableTest extends TestCase
     public function testATableFoldsOnlyWhenARowDoes(): void
     {
         self::assertFalse($this->mounted([
-            'title' => 'Positions',
-            'columns' => [['key' => 'name', 'label' => 'Position']],
+            'title' => 'Berths',
+            'columns' => [['key' => 'name', 'label' => 'Berth']],
             'rows' => [['cells' => ['name' => 'A']]],
         ])->foldable());
 
         self::assertTrue($this->mounted([
-            'title' => 'Positions',
-            'columns' => [['key' => 'name', 'label' => 'Position']],
+            'title' => 'Berths',
+            'columns' => [['key' => 'name', 'label' => 'Berth']],
             'rows' => [['id' => 'a', 'foldable' => true, 'cells' => ['name' => 'A']]],
         ])->foldable());
     }
@@ -108,8 +108,8 @@ final class TableTest extends TestCase
     public function testTheFoldRowSpansEveryColumnIncludingTheChevron(): void
     {
         $table = $this->mounted([
-            'title' => 'Positions',
-            'columns' => [['key' => 'name', 'label' => 'Position'], ['key' => 'seats', 'label' => 'Seats']],
+            'title' => 'Berths',
+            'columns' => [['key' => 'name', 'label' => 'Berth'], ['key' => 'depth', 'label' => 'Depth']],
             'rows' => [['id' => 'a', 'foldable' => true, 'cells' => ['name' => 'A']]],
         ]);
 
@@ -119,12 +119,12 @@ final class TableTest extends TestCase
     public function testTheAddressDecidesWhichRowsAreOpen(): void
     {
         $table = $this->mounted([
-            'title' => 'Positions',
-            'open' => ['warden', 'ranger'],
-            'columns' => [['key' => 'name', 'label' => 'Position']],
+            'title' => 'Berths',
+            'open' => ['north-12', 'east-7'],
+            'columns' => [['key' => 'name', 'label' => 'Berth']],
             'rows' => [
-                ['id' => 'warden', 'foldable' => true, 'cells' => ['name' => 'Warden']],
-                ['id' => 'scout', 'foldable' => true, 'cells' => ['name' => 'Scout']],
+                ['id' => 'north-12', 'foldable' => true, 'cells' => ['name' => 'North 12']],
+                ['id' => 'south-4', 'foldable' => true, 'cells' => ['name' => 'South 4']],
             ],
         ]);
 
@@ -135,23 +135,23 @@ final class TableTest extends TestCase
     public function testTheOpenSetIsAlsoAcceptedTheWayTheAddressSpellsIt(): void
     {
         $table = $this->mounted([
-            'title' => 'Positions',
-            'open' => 'warden,ranger',
-            'columns' => [['key' => 'name', 'label' => 'Position']],
-            'rows' => [['id' => 'ranger', 'foldable' => true, 'cells' => ['name' => 'Ranger']]],
+            'title' => 'Berths',
+            'open' => 'north-12,east-7',
+            'columns' => [['key' => 'name', 'label' => 'Berth']],
+            'rows' => [['id' => 'east-7', 'foldable' => true, 'cells' => ['name' => 'East 7']]],
         ]);
 
-        self::assertSame(['warden', 'ranger'], $table->open);
+        self::assertSame(['north-12', 'east-7'], $table->open);
         self::assertTrue($table->isOpen($table->rows[0]));
     }
 
     public function testOnlyTheSortedColumnSaysSoAndSaysWhichWay(): void
     {
         $table = $this->mounted([
-            'title' => 'Positions',
-            'sort' => 'seats',
+            'title' => 'Berths',
+            'sort' => 'depth',
             'direction' => 'descending',
-            'columns' => [['key' => 'name', 'label' => 'Position'], ['key' => 'seats', 'label' => 'Seats']],
+            'columns' => [['key' => 'name', 'label' => 'Berth'], ['key' => 'depth', 'label' => 'Depth']],
             'rows' => [],
         ]);
 
@@ -167,9 +167,9 @@ final class TableTest extends TestCase
         $this->expectExceptionMessage('direction');
 
         $this->mounted([
-            'title' => 'Positions',
+            'title' => 'Berths',
             'direction' => 'downwards',
-            'columns' => [['key' => 'name', 'label' => 'Position']],
+            'columns' => [['key' => 'name', 'label' => 'Berth']],
             'rows' => [],
         ]);
     }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the UhifadhiLabs Element Module.
+ * This file is part of the UtafitiLabs Element Bundle.
  *
  * (c) Ezekiel Mjema <https://github.com/eemjema>
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Uhifadhi\Element\Model;
+namespace UtafitiLabs\ElementBundle\Model;
 
 /**
  * ONE FACT PER COLUMN — the register idiom, as a value.
@@ -20,7 +20,7 @@ namespace Uhifadhi\Element\Model;
  * register sorts by it (`sortUrl` — a sortable header IS a link, and the server
  * owns where it goes), and whether it holds figures (`numeric`). It carries no
  * class: a caller names the FACT and the component decides the vocabulary, so a
- * seat count is right-aligned and mono in every register in the product without
+ * depth is right-aligned and mono in every register in the product without
  * anyone remembering to say `.num`.
  */
 final class TableColumn
@@ -54,7 +54,7 @@ final class TableColumn
     }
 
     /**
-     * The house class for this column's cells, or an empty string where the
+     * The class for this column's cells, or an empty string where the
      * cell is ordinary — never a null the template has to think about.
      */
     public function cellClass(): string
